@@ -2,10 +2,10 @@ import paho.mqtt.client as mqtt
 import time
 import random
 
-BROKER="test.mosquitto.org"
+BROKER="test.mosquitto.org"#Também pode ser localhost. Mas caso você altere essa variável, você também precisa alterar a variável do subscriber
 PORT=1883
 KEEPALIVE=60
-TOPIC="teste"
+TOPIC="ultrassom"
 inicio_random=0#valor aleatório inicial
 fim_random=30#valor aleatório limite
 time_sleep_pub=1
