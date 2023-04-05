@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Dados Recebidos</title>
+    <script src="('teste', 0).json"></script>
+  </head>
+  <body>
+    <h1>Dados Recebidos:</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>Mensagem</th>
+          <th>Tópico</th>
+          <th>QoS</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for msg in data %}
+        <tr>
+          <td>{{ msg.mensagem }}</td>
+          <td>{{ msg.topico }}</td>
+          <td>{{ msg.qos }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </body>
+</html>
