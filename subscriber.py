@@ -53,11 +53,12 @@ def on_message(client, userdata, msg):
             with open(f'{msg.topic}','at') as f:#instanciou a variavel f para abrir/criar o arquivo com o nome do tópico(ou qualquer outro que tenha alterado). Nesse caso, o nome do arquivo é o nome do 
                 mensagem={
                 #'id': str(valor_da_id) caso você queira colocar outra coisa como id
-                'mensagem': msg.payload,#Definição da do dado 'mensagem no json'
-                'topico': msg.topic,#Definição do tópico no json
+                'mensagem': str(msg.payload),#Definição da do dado 'mensagem no json'
+                'topico': str(msg.topic),#Definição do tópico no json
                 }
 
-                json.dump(mensagem,f,indent=4)#O argumento indent não é obrigatório
+                json.dump(mensagem,f)#O argumento indent não é obrigatório
+                f.write('\n')
                      
       
     print("=============================") 
