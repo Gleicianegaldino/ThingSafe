@@ -9,7 +9,7 @@ HOST= "test.mosquitto.org"#LEMBRE-SE DE QUE O BROKER DO SUBSCRIBER E DO PUBLISHE
 PORT=1883#Essa é a porta do broker
 keepalive=60 
 bind_address="" 
-TOPIC=[("ultrassom",0),("quarto",0)]#tupla com tópico e QoS. Pode-se adicionar diversos tópicos e alterar o QoS caso queira 
+TOPIC=[("dataSet",0),("quarto",0)]#tupla com tópico e QoS. Pode-se adicionar diversos tópicos e alterar o QoS caso queira 
  
 #Só para relembrar: QoS=0 significa que a entrega da mensagem será feita com o melhor esforço, sendo assim adicionada à fila do broker e não tendo a confirmação que o subscriber irá receber a mensagem. Resumindo, a mensagem não é armazenada 
 #QoS=1 significa que há uma garantia de que pelo menos uma vez a mensagem irá ser entregue ao receptor 
