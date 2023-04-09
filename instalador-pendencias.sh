@@ -16,7 +16,7 @@ then
 fi
 
 # Verifica se o pacote paho-mqtt está instalado
-if ! python -c "import paho.mqtt.client" &> /dev/null # Esse comando descarta a saída padrão(true). Ou seja, caso seja false, não irá ser imprimido nada na tela, já que a saída padrão é a função do dado comando
+if ! python3 -c "import paho.mqtt.client" &> /dev/null # Esse comando descarta a saída padrão(true). Ou seja, caso seja false, não irá ser imprimido nada na tela, já que a saída padrão é a função do dado comando
 then
     echo "paho-mqtt não está instalado. Instalando..."
     sudo pip install paho-mqtt
@@ -37,7 +37,13 @@ then
     sudo apt-get update
     sudo apt-get install mosquitto-clients -y
 fi
+#verifica se o pymysql tá instalado
+if ! dpkg -s python3-pymysql >/dev/null 2>&1; then
+    echo "O pacote pymysql não está instalado. Instalando..."
+    sudo apt-get update
+    pip install pymysql -y # instala o pymysql
 
+fi
 # Inicia o broker Mosquitto
 sudo service mosquitto start
 
