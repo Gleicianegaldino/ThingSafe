@@ -1,6 +1,14 @@
-{"mensagem": "b'20'", "topico": "dataSet"}
-{"mensagem": "b'29'", "topico": "dataSet"}
-{"mensagem": "b'24'", "topico": "dataSet"}
-{"mensagem": "b'0'", "topico": "dataSet"}
-{"mensagem": "b'23'", "topico": "dataSet"}
-{"mensagem": "b'21'", "topico": "dataSet"}
+{
+  "data": [
+    {
+      "messagem": "b'29'",
+      "topico": "dataSet",
+      "qos": "0"
+    },
+    {
+      "messagem": "b'15'",
+      "topico": "dataSet",
+      "qos": "0"
+    }
+  ]
+}

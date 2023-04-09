@@ -1,93 +1,101 @@
+import threading
 import paho.mqtt.client as mqtt 
 import time 
 import json
 import sys
-  
-#some comments are writted in portuguese. If you want to know about, you can use the google tradutor :p 
+from flask import Flask, render_template
+from flask_socketio import SocketIO, emit
+import paho.mqtt.client as mqtt
+import os
  
-HOST= "test.mosquitto.org"#LEMBRE-SE DE QUE O BROKER DO SUBSCRIBER E DO PUBLISHER DEVEM SER IGUAIS. outro valor para essa variável seria um broker publico: test.mosquitto.org
-PORT=1883#Essa é a porta do broker
+HOST= "test.mosquitto.org"
+PORT = 1883
 keepalive=60 
-bind_address="" 
-TOPIC=[("dataSet",0),("quarto",0)]#tupla com tópico e QoS. Pode-se adicionar diversos tópicos e alterar o QoS caso queira 
- 
-#Só para relembrar: QoS=0 significa que a entrega da mensagem será feita com o melhor esforço, sendo assim adicionada à fila do broker e não tendo a confirmação que o subscriber irá receber a mensagem. Resumindo, a mensagem não é armazenada 
-#QoS=1 significa que há uma garantia de que pelo menos uma vez a mensagem irá ser entregue ao receptor 
-#QoS=2 significa que a mensagem irá ser recebida apenas uma vez pelo receptor(é mais lento, mas mais confiável) 
- 
-  
-def on_connect(client, userdata, flags, rc): 
-     
+bind_address=""
+TOPIC = [("dataSet", 0)]    
+
+dir_atual = os.path.dirname(os.path.abspath(__file__))
+
+app = Flask(__name__)
+app.config['SECRET_KEY'] = 'secret!'
+socketio = SocketIO(app)
+
+data = {"data": []}
+
+def on_connect(client, userdata, flags, rc):     
     if rc == 0: 
         print("Connected with result code "+str(rc)) 
-        global Connected#Torna a variável Connected global 
-        Connected = True#"ativa" a variável 
-              
+        global Connected
+        Connected = True    
     else: 
         print("Falha na conexão") 
-  
-  
-Connected = False #Variável global utilizada como referência para saber se o subscriber está conectado ao broker. 
-  
-#def on_message(client, userdata, msg): 
-#    for i in range(len(TOPIC)): 
-#        if ((msg.topic,msg.qos)==TOPIC[i]):#comparação do tópico(tupla de tópico e Qos) da mensagem com o tópico(tupla) da variável TOPIC 
-#
-#            with open(f'{TOPIC[i]}.json','at') as f:#instanciou a variavel f para abrir/criar o arquivo com o nome do tópico(ou qualquer outro que tenha alterado) 
-#                mensagem={
-#                #'id': str(valor_da_id) caso você queira colocar outra coisa como id
-#                'mensagem': str(msg.payload),#Definição da do dado 'mensagem no json'
-#                'topico': str(msg.topic),#Definição do tópico no json
-#                'qos': str(msg.qos)
-#                };
-#
-#                json.dump(mensagem,f,indent=2)#O argumento indent não é obrigatório
-#                f.write('\n')#Quebra de linha entre os jsons
-                
+Connected = False
 
+def on_message(client, userdata, msg):
+    for i in range(len(TOPIC)):
+        if ((msg.topic,msg.qos)==TOPIC[i]):
+            # Adicione cada mensagem recebida ao objeto 'data'
+            message = {
+                # "mensagem": str(msg.payload),
+                "messagem": str(msg.payload),
+                "topico": str(msg.topic),
+                "qos": str(msg.qos),
+            }
+            # message = json.loads(msg.payload.decode("utf-8").replace("'", '"'))
+            data["data"].append(message)
 
-def on_message(client, userdata, msg): 
-    for i in range(len(TOPIC)): 
-        if ((msg.topic,msg.qos)==TOPIC[i]):#comparação do tópico(tupla de tópico e Qos) da mensagem com o tópico(tupla) da variável TOPIC 
-            
-            with open(f'{msg.topic}','at') as f:#instanciou a variavel f para abrir/criar o arquivo com o nome do tópico(ou qualquer outro que tenha alterado). Nesse caso, o nome do arquivo é o nome do 
-                mensagem={
-                #'id': str(valor_da_id) caso você queira colocar outra coisa como id
-                'mensagem': str(msg.payload),#Definição da do dado 'mensagem no json'
-                'topico': str(msg.topic),#Definição do tópico no json
-                }
+    with open(f"dataSet.json", "w") as f:
+        # Escreva o objeto inteiro no arquivo
+        json.dump(data, f, indent=2)
+        f.write('\n')
 
-                json.dump(mensagem,f)#O argumento indent não é obrigatório
-                f.write('\n')
-                     
-      
-    print("=============================") 
-    print("Topic: "+str(msg.topic) )
-    print("Payload: "+str(msg.payload)) 
-    print("=============================") 
-  
-      
-  
-      
-  
-  
- #message='teste' this line is unnused 
-client = mqtt.Client("python3") 
-client.on_connect = on_connect 
-client.on_message = on_message 
-  
-client.connect(HOST, PORT, keepalive,bind_address) 
-  
-client.loop_start() 
-while Connected != True: 
-    time.sleep(1)#time to wait a start a connection 
-  
-try: 
-    while True: 
-        time.sleep(1) 
-        client.subscribe(TOPIC) 
-  
-except KeyboardInterrupt: 
-    print('\nSaindo') 
-    client.disconnect() 
-    client.loop_stop 
+    print("Topic: "+str(msg.topic))
+    print("Payload: "+str(msg.payload))
+
+@app.route('/')
+def index():
+    for topic in TOPIC:
+        with open(os.path.join(dir_atual, f'{topic[0]}.json'), 'r') as f:
+            for line in f:
+                # json_data = json.loads(line)
+                # data.append(json_data)
+                data.append(json.loads(line))
+    return render_template('index.html', data=data)
+
+@socketio.on('request_data')
+def send_data():
+    json_data = []
+    for topic in TOPIC:
+        with open(os.path.join(dir_atual, f'{topic[0]}.json'), 'r') as f:
+            for line in f:
+                json_data.append = json.loads(line)
+    emit('data', json_data)
+
+def mqtt_loop():
+    #message='teste' this line is unnused 
+    client = mqtt.Client("python3") 
+    client.on_connect = on_connect 
+    client.on_message = on_message 
+    
+    client.connect(HOST, PORT, keepalive,bind_address) 
+    
+    client.loop_start() 
+    while Connected != True: 
+        time.sleep(1)
+    
+    try: 
+        while True: 
+            time.sleep(1) 
+            client.subscribe(TOPIC) 
+    
+    except KeyboardInterrupt: 
+        print('\nSaindo') 
+        client.disconnect() 
+        client.loop_stop 
+
+# Inicialização do SocketIO
+if __name__ == '__main__':
+    mqtt_thread = threading.Thread(target=mqtt_loop)
+    mqtt_thread.start()
+
+    socketio.run(app, debug=True)
