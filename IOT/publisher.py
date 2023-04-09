@@ -2,26 +2,31 @@ import paho.mqtt.client as mqtt
 import time
 import random
 
-BROKER="test.mosquitto.org"#Também pode ser localhost. Mas caso você altere essa variável, você também precisa alterar a variável do subscriber
+BROKER="test.mosquitto.org"
 PORT=1883
 KEEPALIVE=60
-TOPIC="ultrassom"
-inicio_random=0#valor aleatório inicial
-fim_random=30#valor aleatório limite
+TOPIC="dataSet"
 time_sleep_pub=1
 
 #Publisher
 client = mqtt.Client()
 client.connect(BROKER, PORT, KEEPALIVE)
 client.loop_start()
-#time.sleep(2)  # import time
-#client.loop_forever()
+
+def publish_data(data):
+    client.publish(TOPIC, data)
+
 try:
     while True:
-        msg=random.randint(inicio_random,fim_random) #para o random entrar no loop. Inicia uma função random(nativa do python)
-        client.publish(TOPIC, msg)#publica a mensagem
-        time.sleep(time_sleep_pub)#espera o tempo da variável time_sleep_pub, ficando sem fazer nada nesse meio tempo
-except KeyboardInterrupt:#quando clicar Ctrln+C
+        message=random.randint(0, 30)
+        client.publish(TOPIC, message)
+        time.sleep(time_sleep_pub)
+        
+except KeyboardInterrupt:
     print("\nSaindo")
-    client.disconnect()#Desconecta do broker
+    client.disconnect()
+    client.loop_stop()
+except Exception as e:
+    print("Erro: ", e)
+    client.disconnect()
     client.loop_stop()
