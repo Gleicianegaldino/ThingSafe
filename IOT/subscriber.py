@@ -1,7 +1,21 @@
 import paho.mqtt.client as mqtt 
 import time 
 import json
-import sys
+import pymysql
+
+
+
+
+#COnfigurações do Banco
+host_banco="localhost"
+user_banco="root"
+passwd_banco="root"
+db_nome_banco="Thingsafe"
+porta_banco = 3306
+tempo_espera_insert=1#provavelmente não será usado nesse código pois o insert será feito a cada iteração com o broker
+
+operacao_insert= "INSERT INTO monitoramento(mensagem,topico,qos) VALUES(%s, %s, %s)"#Não altere muito aqui, mas se alterar, verifique o laço for com os dados do json
+
   
 #some comments are writted in portuguese. If you want to know about, you can use the google tradutor :p 
  
@@ -9,7 +23,7 @@ HOST= "test.mosquitto.org"#If you want to set this parameter in a public host, i
 PORT=1883#This is a mosquitto port(when i start my broker) 
 keepalive=60 
 bind_address="" 
-TOPIC=[("microondas",0),("ultrassom",0)]#tupla com tópico e QoS. Pode-se adicionar diversos tópicos e alterar o QoS caso queira 
+TOPIC=[("microondas",0),("dataSet",0)]#tupla com tópico e QoS. Pode-se adicionar diversos tópicos e alterar o QoS caso queira 
  
 #Só para relembrar: QoS=0 significa que a entrega da mensagem será feita com o melhor esforço, sendo assim adicionada à fila do broker e não tendo a confirmação que o subscriber irá receber a mensagem. Resumindo, a mensagem não é armazenada 
 #QoS=1 significa que há uma garantia de que pelo menos uma vez a mensagem irá ser entregue ao receptor 
@@ -30,6 +44,13 @@ def on_connect(client, userdata, flags, rc):
 Connected = False #Variável global utilizada como referência para saber se o subscriber está conectado ao broker. 
 
 
+
+
+
+#Conexão com o banco
+#A conexão está sendo feita fora da funçao para poder ser tratada no trycatch do final do código
+conexao = pymysql.connect(host=host_banco,port=porta_banco, user=user_banco, passwd=passwd_banco, db=db_nome_banco)
+
 def on_message(client, userdata, msg):
     print("=============================") 
     print("Topic: "+str(msg.topic) )
@@ -43,6 +64,22 @@ def on_message(client, userdata, msg):
                 'topico': str(msg.topic),
                 'qos': str(msg.qos)#Caso queira salvar como um inteiro você digita: 
                 };
+            
+            #parte dentro do laço que poderemos fazer o insert
+            
+            cursor = conexao.cursor()
+            
+            #transformando o tipo dos dados e guardando em outras variáveis
+            mensagemBanco= int(msg.payload)
+            topicoBanco= str(msg.topic)
+            qosBanco= str(msg.qos)
+            
+            #insert no BD
+            cursor.execute(operacao_insert,(mensagemBanco,topicoBanco,qosBanco))
+            
+            #confirmar a inserção
+            conexao.commit()
+            
             
             with open(f'{msg.topic}.json','w') as f:
                 pass
@@ -97,5 +134,7 @@ try:
   
 except KeyboardInterrupt: 
     print('\nSaindo') 
+    conexao.close()#fecha a conexão
+    print("\nConexão com o banco encerrada e programa fechado com sucesso\n")
     client.disconnect() 
     client.loop_stop 
