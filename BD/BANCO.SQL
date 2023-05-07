@@ -2,7 +2,7 @@ create database Thingsafe;
 use Thingsafe;
 
 
-create table monitoramento(
+create table dispositivo(
 id int not null auto_increment,
 topico varchar (255) not null,
 mensagem int not null,

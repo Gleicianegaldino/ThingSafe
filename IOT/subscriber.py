@@ -14,7 +14,7 @@ db_nome_banco="Thingsafe"
 porta_banco = 3306
 tempo_espera_insert=1#provavelmente não será usado nesse código pois o insert será feito a cada iteração com o broker
 
-operacao_insert= "INSERT INTO monitoramento(mensagem,topico,qos) VALUES(%s, %s, %s)"#Não altere muito aqui, mas se alterar, verifique o laço for com os dados do json
+operacao_insert= "INSERT INTO dispositivo(mensagem,topico,qos) VALUES(%s, %s, %s)"#Não altere muito aqui, mas se alterar, verifique o laço for com os dados do json
 
   
 #some comments are writted in portuguese. If you want to know about, you can use the google tradutor :p 

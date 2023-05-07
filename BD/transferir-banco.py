@@ -15,7 +15,7 @@ porta_banco = 3306
 tempo_espera_insert=1
 
 
-operacao_insert= "INSERT INTO monitoramento(mensagem,topico,qos) VALUES(%s, %s, %s)"#Não altere muito aqui, mas se alterar, verifique o laço for com os dados do json
+operacao_insert= "INSERT INTO dispositivo(mensagem,topico,qos) VALUES(%s, %s, %s)"#Não altere muito aqui, mas se alterar, verifique o laço for com os dados do json
 
 for i in range(len(NOME_ARQUIVO)):
     caminho_do_arquivo = f'../IOT/{NOME_ARQUIVO[i]}'#percorre o array NOME_ARQUIVO
