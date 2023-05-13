@@ -7,6 +7,7 @@ id int not null auto_increment,
 topico varchar (255) not null,
 mensagem int not null,
 qos int not null,
+data_hora_medicao DATETIME NOT NULL,
 constraint pk_consumo primary key (id)
 );
 
