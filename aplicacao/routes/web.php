@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DispositivoController;
-
+use App\Http\Controllers\HomeController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -20,6 +20,5 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
-Route::get('/invasao_logs',[DispositivoController::class, 'index'])->name('invasao.logs');
+Route::get('/home', [HomeController::class, 'index'])->name('home');
+Route::get('/log_invasoes',[DispositivoController::class, 'index'])->name('log_invasoes');

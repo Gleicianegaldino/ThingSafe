@@ -14,9 +14,9 @@
                         </div>
                     @endif
 
-                    {{ __('You are logged in!') }}
+                    <a href="{{route('log_invasoes')}}" type="button" class="btn btn-outline-danger">Logs das invasões</a>
 
-                    <a href="{{route('invasao.logs')}}"class="btn btn-outline-warning">Tabela com todas as invasões</a>
+
                 </div>
             </div>
         </div>

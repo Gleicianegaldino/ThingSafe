@@ -1,14 +1,15 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\Dispositivo;
 
 use Illuminate\Http\Request;
-use App\Models\Dispositivo;
 
 class DispositivoController extends Controller
 {
     public function index(){
-        $dispositivos = Dispositivo::select('topico','mensagem')->get();
-        return view('dispositivo', compact('dispositivos'));
+        $dispositivo = Dispositivo::all('topico','mensagem');
+
+        return view('dispositivo', compact('dispositivo'));
     }
 }

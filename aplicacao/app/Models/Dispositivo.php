@@ -11,13 +11,11 @@ class Dispositivo extends Model
 
     protected $table = 'Dispositivo';
 
-    protected $fillable = [
+    protected $fillable =[
         'topico',
         'mensagem',
         'qos',
     ];
 
-    protected $guarded = [
-        'id'
-    ];
+    protected $guarded = ['id'];
 }
