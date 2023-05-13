@@ -15,6 +15,7 @@ class Dispositivo extends Model
         'topico',
         'mensagem',
         'qos',
+        'data_hora_medicao',
     ];
 
     protected $guarded = ['id'];

@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class DispositivoController extends Controller
 {
     public function index(){
-        $dispositivo = Dispositivo::all('topico','mensagem');
+        $dispositivo = Dispositivo::all('topico','mensagem','data_hora_medicao');
 
         return view('dispositivo', compact('dispositivo'));
     }
