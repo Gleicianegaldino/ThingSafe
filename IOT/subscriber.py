@@ -11,9 +11,9 @@ import os
 
 #COnfigurações do Banco
 host_banco="localhost"
-user_banco="root"
-passwd_banco="root"
-db_nome_banco="Thingsafe"
+user_banco="thingsafe"
+passwd_banco="thingsafe"
+db_nome_banco="thingsafe"
 porta_banco = 3306
 tempo_espera_insert=1#provavelmente não será usado nesse código pois o insert será feito a cada iteração com o broker
 

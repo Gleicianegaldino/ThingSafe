@@ -8,14 +8,14 @@ NOME_ARQUIVO=[('ultrassom.json')]#tupla com os nomes dos tópicos
 caminho_do_diretorio = '../IOT/'
 #configurações do banco                                             
 host_banco="localhost"
-user_banco="root"
-passwd_banco="root"
-db_nome_banco="Thingsafe"
+user_banco="thingsafe"
+passwd_banco="thingsafe"
+db_nome_banco="thingsafe"
 porta_banco = 3306
 tempo_espera_insert=1
 
 
-operacao_insert= "INSERT INTO dispositivo(mensagem,topico,qos) VALUES(%s, %s, %s)"#Não altere muito aqui, mas se alterar, verifique o laço for com os dados do json
+operacao_insert= "INSERT INTO Dispositivo(mensagem,topico,qos) VALUES(%s, %s, %s)"#Não altere muito aqui, mas se alterar, verifique o laço for com os dados do json
 
 for i in range(len(NOME_ARQUIVO)):
     caminho_do_arquivo = f'../IOT/{NOME_ARQUIVO[i]}'#percorre o array NOME_ARQUIVO
