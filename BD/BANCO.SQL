@@ -11,6 +11,13 @@ data_hora_medicao DATETIME NOT NULL,
 constraint pk_consumo primary key (id)
 );
 
+create table status(
+id_sensor INT NOT NULL AUTO_INCREMENT,
+status_sensor BIT NOT NULL,
+DISPOSITIVO_TOPICO VARCHAR (255) NOT NULL,
+constraint pk_status primary key (id_sensor)
+);
+
 
 /*operações do BD
 

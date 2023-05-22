@@ -4593,5 +4593,117 @@
         "topico": "dataSet",
         "qos": "0",
         "horario": "2023-05-16T15:27:52.237647"
+    },
+    {
+        "mensagem": 9,
+        "topico": "dataSet",
+        "qos": "0",
+        "horario": "2023-05-22T01:14:56.475486",
+        "status": null
+    },
+    {
+        "mensagem": 0,
+        "topico": "dataSet",
+        "qos": "0",
+        "horario": "2023-05-22T01:14:57.488983",
+        "status": null
+    },
+    {
+        "mensagem": 15,
+        "topico": "dataSet",
+        "qos": "0",
+        "horario": "2023-05-22T01:14:58.488908",
+        "status": null
+    },
+    {
+        "mensagem": 15,
+        "topico": "dataSet",
+        "qos": "0",
+        "horario": "2023-05-22T01:14:59.477308",
+        "status": null
+    },
+    {
+        "mensagem": 16,
+        "topico": "dataSet",
+        "qos": "0",
+        "horario": "2023-05-22T01:15:00.477938",
+        "status": null
+    },
+    {
+        "mensagem": 14,
+        "topico": "dataSet",
+        "qos": "0",
+        "horario": "2023-05-22T01:15:01.492163",
+        "status": null
+    },
+    {
+        "mensagem": 6,
+        "topico": "dataSet",
+        "qos": "0",
+        "horario": "2023-05-22T01:15:02.504122",
+        "status": null
+    },
+    {
+        "mensagem": 1,
+        "topico": "dataSet",
+        "qos": "0",
+        "horario": "2023-05-22T01:15:03.478687",
+        "status": null
+    },
+    {
+        "mensagem": 9,
+        "topico": "dataSet",
+        "qos": "0",
+        "horario": "2023-05-22T01:15:04.489294",
+        "status": null
+    },
+    {
+        "mensagem": 9,
+        "topico": "dataSet",
+        "qos": "0",
+        "horario": "2023-05-22T01:15:05.480070",
+        "status": null
+    },
+    {
+        "mensagem": 27,
+        "topico": "dataSet",
+        "qos": "0",
+        "horario": "2023-05-22T01:15:06.480632",
+        "status": null
+    },
+    {
+        "mensagem": 17,
+        "topico": "dataSet",
+        "qos": "0",
+        "horario": "2023-05-22T01:15:07.482552",
+        "status": null
+    },
+    {
+        "mensagem": 26,
+        "topico": "dataSet",
+        "qos": "0",
+        "horario": "2023-05-22T01:15:08.482236",
+        "status": null
+    },
+    {
+        "mensagem": 17,
+        "topico": "dataSet",
+        "qos": "0",
+        "horario": "2023-05-22T01:15:09.481628",
+        "status": null
+    },
+    {
+        "mensagem": 18,
+        "topico": "dataSet",
+        "qos": "0",
+        "horario": "2023-05-22T01:15:10.482542",
+        "status": null
+    },
+    {
+        "mensagem": 7,
+        "topico": "dataSet",
+        "qos": "0",
+        "horario": "2023-05-22T01:15:11.482403",
+        "status": null
     }
 ]
