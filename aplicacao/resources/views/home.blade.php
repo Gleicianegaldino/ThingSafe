@@ -1,12 +1,6 @@
 @extends('layouts.app')
 
-@extends('adminlte::page')
-
 @section('title', 'Dashboard')
-
-@section('content_header')
-<img src='vendor/adminlte/dist/img/Img_ThingSafe.png' alt="profile Pic" width="200">
-@stop
 
 @section('content')
 <div class="container">
@@ -33,8 +27,4 @@
         </div>
     </div>
 </div>
-@stop
-
-@section('css')
-<link rel="stylesheet" href="/css/admin_custom.css">
 @stop

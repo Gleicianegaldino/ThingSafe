@@ -14,3 +14,8 @@ Além disso, o dispositivo IoT de segurança também é capaz de disparar alerta
 - Gleiciane Galdino
 - Joanna Victória
 - Rayanne Sales
+
+## Níveis de Acesso
+
+Admin: php artisan permission:create-permission admin
+User: php artisan permission:create-permission user
