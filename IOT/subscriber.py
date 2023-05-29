@@ -131,6 +131,7 @@ def reiniciar_contador_status(topico):
 
 
 
+
 #SE A FUNÇÃO FOR CHAMADA FORA DO ESCOPO IRÁ RETORNAR FALSE(DISPOSITIVO DESATIVADO) --> A função ainda não foi bem produzida
 def status_sensor_json_banco(DISPOSITIVO_TOPICO, DENTRO_OU_FORA_DA_FUNCAO, EH_JSON):
     # Verificar se o campo DENTRO_OU_FORA_DA_FUNCAO está vazio
@@ -162,8 +163,13 @@ def status_sensor_json_banco(DISPOSITIVO_TOPICO, DENTRO_OU_FORA_DA_FUNCAO, EH_JS
 ultima_publicacao = {}
 
 
-#=============================================================
 
+
+
+
+
+#=============================================================
+#Função que cria o JSON que mostra os dispositivos desativados(a mesma é chamada na função imprimir_topicos_inativos())
 
 def JSON_status_desativado(dados, nome_arquivo):
     
@@ -191,7 +197,7 @@ def JSON_status_desativado(dados, nome_arquivo):
 
     print(f"Arquivo {nome_arquivo} atualizado com sucesso.")
 
-
+#=============================================================
 
     
 
@@ -220,8 +226,10 @@ def imprimir_topicos_inativos():
     else:
         print(f"Nenhum tópico inativo nos últimos {tempo_verificacao_topicos_n_publicados} segundos")
         
+ 
+ 
         
-
+#========================================================================================================
 #Função de atualização dos status
 def on_message(client, userdata, msg):
     
@@ -308,30 +316,16 @@ def on_message(client, userdata, msg):
             #atualizar_contador_status(str(msg.topic), str(msg.payload))
 
             
-             
-
-
-
-
-
-
-
-
-
-  
-
-
-
-
-      
-
-  
-      
-  
-      
-  
-  
-
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
 client = mqtt.Client("python3") 
 client.on_connect = on_connect 
 client.on_message = on_message 
@@ -368,7 +362,7 @@ try:
     while True: 
         time.sleep(1) 
         verificar_atualizar_subscricoes()
-        imprimir_topicos_inativos()
+        imprimir_topicos_inativos()#debug da função
        
         
         
