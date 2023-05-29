@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>EventSource Example</title>
+</head>
+<body>
+  <h1>Dados Recebidos:</h1>
+  <ul id="data-list"></ul>
+
+  <script>
+    // Cria uma nova instância do EventSource apontando para a rota '/event-stream'
+    const eventSource = new EventSource('/enviar-dados');
+
+    // Manipula o evento 'message' recebido do servidor
+    eventSource.addEventListener('message', function(event) {
+      const data = JSON.parse(event.data);
+      console.log('Dados recebidos:', data);
+
+      // Atualiza a lista de dados no HTML
+      const dataList = document.getElementById('data-list');
+      const listItem = document.createElement('li');
+      listItem.textContent = data.Dispositivo_desligado;
+      dataList.appendChild(listItem);
+    });
+
+    // Manipula o evento 'error' para lidar com erros de conexão
+    eventSource.addEventListener('error', function(event) {
+      console.error('Erro na conexão com o servidor de eventos:', event);
+    });
+  </script>
+</body>
+</html>

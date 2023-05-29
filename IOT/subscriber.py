@@ -6,6 +6,7 @@ import datetime
 import os
 import signal
 import sys
+import requests
 
 
 
@@ -31,7 +32,8 @@ PORT=1883#This is a mosquitto port(when i start my broker)
 keepalive=60 
 bind_address="" 
 TOPIC=[("dataSet",0),("microondas",0)]#tupla com tópico e QoS. Pode-se adicionar diversos tópicos e alterar o QoS caso queira 
- 
+
+
 #Só para relembrar: QoS=0 significa que a entrega da mensagem será feita com o melhor esforço, sendo assim adicionada à fila do broker e não tendo a confirmação que o subscriber irá receber a mensagem. Resumindo, a mensagem não é armazenada 
 #QoS=1 significa que há uma garantia de que pelo menos uma vez a mensagem irá ser entregue ao receptor 
 #QoS=2 significa que a mensagem irá ser recebida apenas uma vez pelo receptor(é mais lento, mas mais confiável) 
@@ -161,8 +163,43 @@ ultima_publicacao = {}
 
 
 #=============================================================
-#função de atualização dos status
 
+
+def JSON_status_desativado(dados, nome_arquivo):
+    
+    nome_arquivo = f'{nome_arquivo}.json'
+    
+    dados_atualizados = {
+    "Dispositivos_desligados": dados
+    }
+    # Verificar se o arquivo existe
+    if not os.path.exists(nome_arquivo):
+        # Criar o arquivo se não existir
+        with open(nome_arquivo, 'w') as arquivo:
+            json.dump({}, arquivo)
+
+    # Ler o arquivo JSON existente
+    with open(nome_arquivo, 'r') as arquivo:
+        dados_antigos = json.load(arquivo)
+
+    # Atualizar os dados com os dados fornecidos
+    dados_antigos.update(dados_atualizados)
+
+    # Reescrever o arquivo com os dados atualizados
+    with open(nome_arquivo, 'w') as arquivo:
+        json.dump(dados_antigos, arquivo)
+
+    print(f"Arquivo {nome_arquivo} atualizado com sucesso.")
+
+
+
+    
+
+
+
+
+#=================================================================
+#função de atualização dos status
 def imprimir_topicos_inativos():
     horario_atual = time.time()
     topicos_inativos = []
@@ -178,9 +215,12 @@ def imprimir_topicos_inativos():
             print(topico)
             status_sensor_json_banco(str(topico),"fora",False)
             #Aqui eu posso enviar os dados em JSON para qualquer Host contendo uma atualização
+            JSON_status_desativado(topicos_inativos, "Dispositivos_desativados")
             
     else:
         print(f"Nenhum tópico inativo nos últimos {tempo_verificacao_topicos_n_publicados} segundos")
+        
+        
 
 #Função de atualização dos status
 def on_message(client, userdata, msg):
