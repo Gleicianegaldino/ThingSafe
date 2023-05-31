@@ -67,10 +67,9 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 
 ## Laravel Permission
 
-To create the "admin", "manager" and "operator" permissions, use the following commands in the interface folder in the respective order to maintain the proper numbering in the database.
+To create the "admin" and "operator" permissions, use the following commands in the interface folder in the respective order to maintain the proper numbering in the database.
 
 ```
 php artisan permission:create-permission "admin"
-php artisan permission:create-permission "manager"
 php artisan permission:create-permission "operator"
 ```

@@ -29,12 +29,6 @@ export default function Dashboard({ auth }) {
         } else if (permissionIds.includes(2)) {
             return (
                 <div>
-                    <p>Manager</p>
-                </div>
-            )
-        } else if (permissionIds.includes(3)) {
-            return (
-                <div>
                     <p>Operator</p>
                 </div>
             )
