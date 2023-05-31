@@ -64,3 +64,13 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## Laravel Permission
+
+To create the "admin", "manager" and "operator" permissions, use the following commands in the interface folder in the respective order to maintain the proper numbering in the database.
+
+```
+php artisan permission:create-permission "admin"
+php artisan permission:create-permission "manager"
+php artisan permission:create-permission "operator"
+```
