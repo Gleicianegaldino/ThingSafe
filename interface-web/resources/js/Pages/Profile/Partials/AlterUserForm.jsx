@@ -75,8 +75,8 @@ export default function AlterUserForm({ className = '' }) {
                         value={data.permission}
                         onChange={(e) => setData('permission', e.target.value)}
                     >
-                        <option value="admin">Admin</option>
-                        <option value="operator">Operator</option>
+                        <option value="1">Admin</option>
+                        <option value="2">Operator</option>
                     </Select>
 
                     <InputError message={errors.current_password} className="mt-2" />
