@@ -11,7 +11,6 @@ import axios from 'axios';
 
 export default function AlterUserForm({ className = '' }) {
     const passwordInput = useRef();
-    const currentPasswordInput = useRef();
     const [isRegistrationValid, setRegistrationValid] = useState(true);
 
     const { data, setData, errors, put, reset, processing, recentlySuccessful } = useForm({
