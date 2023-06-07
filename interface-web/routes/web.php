@@ -45,4 +45,49 @@ Route::get('/api/permissions', function () {
     return response()->json($permission);
 });
 
+Route::get('/api/dailyAlertCount', function () {
+    $sum = DB::table('alert_perimeter_break')
+        ->whereDate('created_at', today())
+        ->selectRaw('COALESCE(SUM(status), 0) as count')
+        ->value('dailyCount');
+
+    return response()->json(['dailyCount' => $sum]);
+});
+
+Route::get('/api/weeklyAlertCount', function () {
+    $from = today();
+    $to =  date('d-m-Y', strtotime('-1 week'));
+
+    $sum = DB::table('alert_perimeter_break')
+        ->whereBetween('created_at', [$from, $to])
+        ->selectRaw('COALESCE(SUM(status), 0) as count')
+        ->value('weeklyCount');
+
+    return response()->json(['weeklyCount' => $sum]);
+});
+
+Route::get('/api/monthlyAlertCount', function () {
+    $from = today();
+    $to = date('d-m-Y', strtotime('-1 month'));
+
+    $sum = DB::table('alert_perimeter_break')
+        ->whereBetween('created_at', [$from, $to])
+        ->selectRaw('COALESCE(SUM(status), 0) as count')
+        ->value('monthlyCount');
+
+    return response()->json(['monthlyCount' => $sum]);
+});
+
+Route::get('/api/annualAlertCount', function () {
+    $from = today();
+    $to =  date('d-m-Y', strtotime('-1 ye'));
+
+    $sum = DB::table('alert_perimeter_break')
+        ->whereBetween('created_at', [$from, $to])
+        ->selectRaw('COALESCE(SUM(status), 0) as count')
+        ->value('annualCount');
+
+    return response()->json(['annualCount' => $sum]);
+});
+
 require __DIR__.'/auth.php';

@@ -9,15 +9,38 @@ import Footer from '@/Layouts/Footer';
 export default function Dashboard({ auth }) {
 
     const [permissions, setPermissions] = useState([]);
-
+    const [dailyAlertCount, setDailyAlertCount] = useState([]);
+    const [weeklyAlertCount, setWeeklyAlertCount] = useState([]);
+    const [monthlyAlertCount, setMonthlyAlertCount] = useState([]);
+    const [annualAlertCount, setAnnualAlertCount] = useState([]);
+    
     useEffect(() => {
-        axios.get('/api/permissions')
-            .then(response => {
-                setPermissions(response.data);
-            })
-            .catch(error => {
-                console.error('Failed to fetch permissions:', error);
-            });
+        const fetchData = async () => {
+            try {
+                const permissionsResponse = await axios.get('/api/permissions');
+                setPermissions(permissionsResponse.data);
+
+                const dailyAlertCountResponse = await axios.get('/api/dailyAlertCount');
+                const { dailyCount } = dailyAlertCountResponse.data;
+                setDailyAlertCount(dailyCount);
+
+                const weeklyAlertCountResponse = await axios.get('/api/weeklyAlertCount');
+                const { weeklyCount } = weeklyAlertCountResponse.data;
+                setWeeklyAlertCount(weeklyCount);
+
+                const monthlyAlertCountResponse = await axios.get('/api/monthlyAlertCount');
+                const { monthlyCount } = monthlyAlertCountResponse.data;
+                setMonthlyAlertCount(monthlyCount);
+
+                const annualAlertCountResponse = await axios.get('/api/annualAlertCount');
+                const { annualCount } = annualAlertCountResponse.data;
+                setAnnualAlertCount(annualCount);
+            } catch (error) {
+                console.error('Failed to fetch data:', error);
+            }
+        };
+
+        fetchData();
     }, []);
 
     const renderContent = () => {
@@ -40,13 +63,13 @@ export default function Dashboard({ auth }) {
     };
 
     const dataTwoColumn = [
-        <LargeTextBlock key={1} text="Daily Events" number="1" backgroundColor="#DC143C" />,
+        <LargeTextBlock key={1} text="Daily Events" number={dailyAlertCount.toString()} backgroundColor="#DC143C" alertColumnValue={dailyAlertCount} />,
         <LargeTextBlock key={2} text="Sectors" number="1" backgroundColor="#F4A460" />,
     ];
     const dataThreeColumn = [
-        <LargeTextBlock key={1} text="Weekly Events" number="1" backgroundColor="#FFA500" />,
-        <LargeTextBlock key={2} text="Monthly Events" number="1" backgroundColor="#32CD32" />,
-        <LargeTextBlock key={3} text="Annual Events" number="1" backgroundColor="#20B2AA" />,
+        <LargeTextBlock key={1} text="Weekly Events" number={weeklyAlertCount} backgroundColor="#FFA500" />,
+        <LargeTextBlock key={2} text="Monthly Events" number={monthlyAlertCount} backgroundColor="#32CD32" />,
+        <LargeTextBlock key={3} text="Annual Events" number={annualAlertCount} backgroundColor="#20B2AA" />,
     ];
 
     return (
@@ -59,7 +82,7 @@ export default function Dashboard({ auth }) {
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                        <div className="p-6 text-gray-900">You're logged in!
+                        <div className="p-6 text-gray-900">
                             {renderContent()}
                             <TwoColumnData data={dataTwoColumn} />
                             <ThreeColumnData data={dataThreeColumn} />
