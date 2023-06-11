@@ -17,9 +17,11 @@ return new class extends Migration
             $table->integer('status');
             $table->integer('qos');
             $table->dateTime('created_at')->nullable();
-            
-            $table->string('smart_cone_id')->unsigned();
-            $table->foreign('smart_cone_id')->references('smart_cone_id')->on('smart_cone_id');
+
+            $table->unsignedBigInteger('smart_cone_id');
+            $table->foreign('smart_cone_id')->references('id')->on('smart_cone');
+
+            $table->foreign('topic_perimeter_break')->references('topic_perimeter_break')->on('smart_cone');
         });
     }
 
