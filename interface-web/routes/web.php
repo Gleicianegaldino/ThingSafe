@@ -34,6 +34,27 @@ Route::get('/mycones', function () {
     return Inertia::render('MyCones');
 })->middleware(['auth', 'verified'])->name('mycones');
 
+Route::get('/dailyevents', function () {
+    return Inertia::render('DailyEvents');
+})->middleware(['auth', 'verified'])->name('dailyevents');
+
+Route::get('/weeklyevents', function () {
+    return Inertia::render('WeeklyEvents');
+})->middleware(['auth', 'verified'])->name('weeklyevents');
+
+Route::get('/monthlyevents', function () {
+    return Inertia::render('MonthlyEvents');
+})->middleware(['auth', 'verified'])->name('monthlyevents');
+
+Route::get('/annualevents', function () {
+    return Inertia::render('AnnualEvents');
+})->middleware(['auth', 'verified'])->name('annualevents');
+
+Route::get('/sectorslist', function () {
+    return Inertia::render('SectorsList');
+})->middleware(['auth', 'verified'])->name('sectorslist');
+
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

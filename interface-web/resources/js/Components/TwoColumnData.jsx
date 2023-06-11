@@ -1,4 +1,4 @@
-export default function ThreeColumnData({ data }) {
+export default function TwoColumnData({ data }) {
     return (
         <div className="flex flex-row">
             <div className="flex-1">

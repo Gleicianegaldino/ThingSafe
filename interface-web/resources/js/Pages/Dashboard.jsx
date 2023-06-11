@@ -1,10 +1,11 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import React, { useState, useEffect } from 'react';
 import LargeTextBlock from '@/Components/LargeTextBlock';
 import ThreeColumnData from '@/Components/ThreeColumnData';
 import TwoColumnData from '@/Components/TwoColumnData';
 import Footer from '@/Layouts/Footer';
+import NavLink from '@/Components/NavLink';
 
 export default function Dashboard({ auth }) {
 
@@ -63,13 +64,30 @@ export default function Dashboard({ auth }) {
     };
 
     const dataTwoColumn = [
-        <LargeTextBlock key={1} text="Daily Events" number={dailyAlertCount.toString()} backgroundColor="#DC143C" alertColumnValue={dailyAlertCount} />,
+
+    <NavLink href={route('dailyevents')} active={route().current('dailyevents')}>
+        <LargeTextBlock key={1} text="Daily Events" number={dailyAlertCount.toString()} backgroundColor="#DC143C" alertColumnValue={dailyAlertCount}/>,
+    </NavLink>,
+
+    <NavLink href={route('sectorslist')} active={route().current('sectorslist')}>
         <LargeTextBlock key={2} text="Sectors" number="1" backgroundColor="#F4A460" />,
+    </NavLink>
+
     ];
     const dataThreeColumn = [
+
+    <NavLink href={route('weeklyevents')} active={route().current('weeklyevents')}>
         <LargeTextBlock key={1} text="Weekly Events" number={weeklyAlertCount} backgroundColor="#FFA500" />,
+    </NavLink>,
+
+    <NavLink href={route('monthlyevents')} active={route().current('monthlyevents')}>
         <LargeTextBlock key={2} text="Monthly Events" number={monthlyAlertCount} backgroundColor="#32CD32" />,
+    </NavLink>, 
+
+    <NavLink href={route('annualevents')} active={route().current('annualevents')}>
         <LargeTextBlock key={3} text="Annual Events" number={annualAlertCount} backgroundColor="#20B2AA" />,
+    </NavLink>
+
     ];
 
     return (
