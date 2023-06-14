@@ -19,6 +19,7 @@ RUN chown -R www-data:www-data /var/www/html/storage
 RUN chown -R www-data:www-data /var/www/html/bootstrap/cache
 
 # Copie o script para o diretório /usr/local/bin e dê permissão de execução
+COPY banco-docker.sql /usr/local/bin
 COPY .docker/entrypoint.sh /usr/local/bin
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
@@ -38,8 +39,8 @@ RUN composer global require laravel/installer
 RUN apt-get install -y mosquitto mosquitto-clients python3-pip
 RUN pip3 install paho-mqtt pymysql
 
-# Inicia o broker Mosquitto
-RUN service mosquitto start
+# Inicia o broker Mosquitto(está comentado pois o mosquitto roda no SO e não é um serviço simplesmente)
+#RUN service mosquitto start
 
 # Defina o ponto de entrada do contêiner
 ENTRYPOINT ["entrypoint.sh"]
