@@ -45,12 +45,24 @@ signal.signal(signal.SIGINT, signal_handler)
 # Loop principal
 while True:
     mqtt_communicator.client.loop_start()
+    
+    #Sobrecarga de método
     def handle_message(client, userdata, msg):
-        mensagem = str(msg.payload)
+        print("=============================")
+        print("Topic: " + str(msg.topic))
+        print("Payload: " + str(msg.payload))
+        print("Hora: " + datetime.datetime.now(datetime.timezone.utc).strftime("%H:%M:%S"))
+        print("=============================")
+        mensagem = int(msg.payload)
         topico = str(msg.topic)
         qos = msg.qos
+        data_hora_medicao = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        
+        #Nesse método pode ser feito o insert de qualquer banco, quando as classes forem criadas
         bd_manipulator.insert_data(mensagem, topico, qos, data_hora_medicao)    
     
 
     # Aguardar 1 segundo antes de executar novamente
     time.sleep(1)
+    #insert no DB
+    mqtt_communicator.client.on_message = handle_message

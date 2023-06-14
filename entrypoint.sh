@@ -11,7 +11,7 @@ done
 # Verifica se o banco de dados Thingsafe já existe
 if ! mysql -u root -p -e "use Thingsafe"; then
   # Cria o banco de dados
-  mysql -u root -p"yourpassword" -e "CREATE DATABASE Thingsafe"
+  mysql -u root -p"root" -e "CREATE DATABASE Thingsafe"
 fi
 
 # Executa as migrações do Laravel

@@ -22,11 +22,8 @@ RUN chown -R www-data:www-data /var/www/html/bootstrap/cache
 COPY .docker/entrypoint.sh /usr/local/bin
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
-# Defina o ponto de entrada do contêiner
-ENTRYPOINT ["entrypoint.sh"]
 # Instalar o composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-
 
 # Instalar o VS Code
 RUN curl -sSL https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
@@ -34,8 +31,15 @@ RUN echo "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable ma
 RUN apt-get update
 RUN apt-get install -y code
 
-
 # Instalar o Laravel
 RUN composer global require laravel/installer
 
+# Instalação das dependências adicionais(Mosquitto,pymysql e paho-mqtt)
+RUN apt-get install -y mosquitto mosquitto-clients python3-pip
+RUN pip3 install paho-mqtt pymysql
 
+# Inicia o broker Mosquitto
+RUN service mosquitto start
+
+# Defina o ponto de entrada do contêiner
+ENTRYPOINT ["entrypoint.sh"]
