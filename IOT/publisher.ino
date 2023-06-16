@@ -1,30 +1,50 @@
-#include <ESP8266WiFi.h>//biblioteca do esp
-#include <PubSubClient.h>//biblioteca do mqtt
+#include <ESP8266WiFi.h>
+#include <PubSubClient.h>
 
-//ESP8266Wifi
-const char* ssid = "mamute";//nome da rede
-const char* password = "kkk12345";//senha da rede
+#include <espnow.h>
+#include <user_interface.h>
 
-//MQTT Broker
-const char* mqttServer = "test.mosquitto.org";//broker
+// ESP8266Wifi
+const char* ssid = "";        // network name
+const char* password = "";  // password
+
+// MQTT broker
+const char* mqttServer = "test.mosquitto.org";
 const int mqttPort = 1883;
 const char* mqttUser = "";
 const char* mqttPassword = "";
-const char* topic = "dataSet";//tópico
+const char* topicIdDevice = "dataSet";  // topic
 
 WiFiClient espClient;
 PubSubClient client(espClient);
 
+// sensor pin
 const int trigPin = 12;
 const int echoPin = 14;
 
-//define sound velocity in cm/uS
+// sound velocity in cm/uS
 #define SOUND_VELOCITY 0.034
-#define CM_TO_INCH 0.393701
 
-long duration;
+
+#define LED D0  //Led in NodeMCU at pin GPIO16 (D0)
+
+const int buzzer = 15;  // D8
+
+// distance
 float distanceCm;
-float distanceInch;
+float averageDistance;
+
+// button
+const int buttonPin = 13;  // D7
+int buttonState = 0;
+
+// calibration
+bool start = false;
+
+// calculate average distance
+const int bufferLength = 10;
+float distances[bufferLength];
+int bufferIndex = 0;
 
 void setup() {
   Serial.begin(9600);
@@ -41,44 +61,113 @@ void setup() {
   }
   Serial.println("Connected to MQTT");
 
-  pinMode(trigPin, OUTPUT); // Sets the trigPin as an Output
-  pinMode(echoPin, INPUT); // Sets the echoPin as an Input
+  pinMode(trigPin, OUTPUT);  // sets the trigPin as an Output
+  pinMode(echoPin, INPUT);   // sets the echoPin as an Input
+  pinMode(buzzer, OUTPUT);
+
+  // button
+  pinMode(buttonPin, INPUT);
+
+  start = false;
+  pinMode(LED, OUTPUT);  //LED pin as output
+  digitalWrite(LED, HIGH);
 }
 
-void loop() {
-  // Clears the trigPin
+void calculateDistance() {
+  // clears the trigPin
   digitalWrite(trigPin, LOW);
   delayMicroseconds(2);
-  // Sets the trigPin on HIGH state for 10 micro seconds
+  // sets the trigPin on HIGH state for 10 micro seconds
   digitalWrite(trigPin, HIGH);
   delayMicroseconds(10);
   digitalWrite(trigPin, LOW);
 
-  // Reads the echoPin, returns the sound wave travel time in microseconds
-  duration = pulseIn(echoPin, HIGH);
-  
-  // Calculate the distance
-  distanceCm = duration * SOUND_VELOCITY/2;
-  
-  // Convert to inches
-  distanceInch = distanceCm * CM_TO_INCH;
+  // reads the echoPin, returns the sound wave travel time in microseconds
+  long duration = pulseIn(echoPin, HIGH);
 
-  int value = distanceCm;
-  Serial.println(distanceCm);
-  char message[1000];
-  sprintf(message, "%d", value);
-  client.publish(topic, message);//publica a mensagem
-  delay(1000);//intervalo entre as mensagens
+  // calculate the distance
+  distanceCm = duration * SOUND_VELOCITY / 2;
+
+  // Atualiza o valor do array distances com a distância capturada
+  distances[bufferIndex] = distanceCm;
+  bufferIndex = (bufferIndex + 1) % bufferLength;
 }
 
+void calculateAverageDistance() {
+  float sum = 0;
 
-//ps: como a placa É o node MCU, é preciso instalar a placa através
-//do link : http://arduino.esp8266.com/stable/package_esp8266com_index.json 
-//um tutorial para download da mesma: https://www.fvml.com.br/2018/12/instalando-biblioteca-do-modulo-esp8266.html
+  for (int i = 0; i < bufferLength; i++) {
+    sum += distances[i];
+  }
 
+  averageDistance = sum / bufferLength;
+}
 
-//No meu caso foi conectado a placa na entrada usb, então atualiza essa opção quando for configurar a porta
-//a placa é o nodeMCU 1.0
+bool checkPerimeterBreak(float distanceCm, float averageDistance) {
+  if (abs(distanceCm - averageDistance) > 6) {
+    return true;
+  }
+  return false;
+}
 
-//precisa-se também instalar a biblioteca PubSubClient. No meu caso, eu pesquisei
-//PubSubClient e instalei a do autor Cloud4RPi , que por conseguinte, instalou as dependências
+void sirenTurnOn() {
+  unsigned long initialTime = millis();
+
+  while (true) {
+    // Serial.println("Zig-Zig");
+
+    tone(buzzer, 1500);
+    delay(500);
+    noTone(buzzer);
+    delay(500);
+
+    unsigned long currentTime = millis();
+    unsigned long elapsedTime = currentTime - initialTime;
+
+    if (elapsedTime >= 5000) {
+      break;
+    }
+  }
+}
+
+void buttonAlert() {
+  buttonState = digitalRead(buttonPin);
+
+  // checking if the button was pressed
+  if (buttonState == LOW) {
+    start = !start;
+    Serial.println("button pressed");
+  }
+}
+
+void loop() {
+  calculateDistance();
+  delay(1000);
+  calculateAverageDistance();
+
+  Serial.print("distanceCm: ");
+  Serial.println(distanceCm);
+  Serial.print("averageDistance: ");
+  Serial.println(averageDistance);
+  Serial.print("\n");
+
+  Serial.println(start);
+  buttonAlert();
+
+  Serial.println(checkPerimeterBreak(distanceCm, averageDistance));
+  Serial.print("\n");
+
+  if (checkPerimeterBreak(distanceCm, averageDistance) && start) {
+    // publish
+    const char* mac = WiFi.macAddress().c_str();
+    Serial.println(mac);
+    char message[1000];
+    // 1 = true
+    int value = 1;
+
+    sprintf(message, "MAC/ %s; ALERT/ %d", mac, value);
+    client.publish(topicIdDevice, message);
+    sirenTurnOn();
+    start = false;
+  }
+}
