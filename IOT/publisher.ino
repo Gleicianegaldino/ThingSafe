@@ -157,7 +157,7 @@ void loop() {
   Serial.println(checkPerimeterBreak(distanceCm, averageDistance));
   Serial.print("\n");
 
-  // if (checkPerimeterBreak(distanceCm, averageDistance) && start) {
+  if (checkPerimeterBreak(distanceCm, averageDistance) && start) {
     // publish
     String macAddress = WiFi.macAddress();
 
@@ -172,5 +172,5 @@ void loop() {
     client.publish(topicIdDevice, message);
     sirenTurnOn();
     start = false;
-  // }
+  }
 }
