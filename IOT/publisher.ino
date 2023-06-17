@@ -157,17 +157,20 @@ void loop() {
   Serial.println(checkPerimeterBreak(distanceCm, averageDistance));
   Serial.print("\n");
 
-  if (checkPerimeterBreak(distanceCm, averageDistance) && start) {
+  // if (checkPerimeterBreak(distanceCm, averageDistance) && start) {
     // publish
-    const char* mac = WiFi.macAddress().c_str();
-    Serial.println(mac);
+    String macAddress = WiFi.macAddress();
+
+    Serial.print("mac: ");
+    Serial.println(macAddress);
     char message[1000];
     // 1 = true
     int value = 1;
 
-    sprintf(message, "MAC/ %s; ALERT/ %d", mac, value);
+    snprintf(message, sizeof(message), "%02X:%02X:%02X:%02X:%02X:%02X; ALERT/ %d",
+             macAddress[0], macAddress[1], macAddress[2], macAddress[3], macAddress[4], macAddress[5], value);
     client.publish(topicIdDevice, message);
     sirenTurnOn();
     start = false;
-  }
+  // }
 }
