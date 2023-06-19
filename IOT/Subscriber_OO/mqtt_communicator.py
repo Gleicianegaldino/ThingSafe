@@ -33,9 +33,9 @@ class MQTTCommunicator:
             self.client.subscribe(topic, qos=qos)
             print("Subscribed to topic:", topic, "with QoS:", qos)
 
-    def on_message(self, client, userdata, msg):
+    def on_message(self, client, userdata, v):
         print("=============================")
-        print("Topic: " + str(msg.topic))
-        print("Payload: " + str(msg.payload))
+        print("Topic: " + str(v.topic))
+        print("Payload: " + str(v.payload))
         print("Hora: " + datetime.datetime.now(datetime.timezone.utc).strftime("%H:%M:%S"))
         print("=============================")

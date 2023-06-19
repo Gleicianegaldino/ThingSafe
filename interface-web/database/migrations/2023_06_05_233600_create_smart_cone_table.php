@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('smart_cone', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('topic_perimeter_break');
+            $table->string('mac');
 
-            $table->index('topic_perimeter_break');
+            $table->index('mac');
         });
     }
 

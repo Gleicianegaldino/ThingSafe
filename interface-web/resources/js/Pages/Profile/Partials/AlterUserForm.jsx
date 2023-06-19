@@ -78,27 +78,7 @@ export default function AlterUserForm({ className = '' }) {
                         <option value="2">Operator</option>
                     </Select>
 
-                    <InputError message={errors.current_password} className="mt-2" />
-                </div>
-
-                <div>
-                    <InputLabel htmlFor="password" value="Registration" />
-
-                    <TextInput
-                        id="password"
-                        ref={passwordInput}
-                        value={data.registration}
-                        onChange={(e) => setData('registration', e.target.value)}
-                        type="password"
-                        className="mt-1 block w-full"
-                        autoComplete="registration"
-                    />
-
-                    {!isRegistrationValid && (
-                        <InputError message="Invalid registration" className="mt-2" />
-                    )}
-
-                    <InputError message={errors.registration} className="mt-2" />
+                    <InputError message={errors.name} className="mt-2" />
                 </div>
 
                 <div className="flex items-center gap-4">

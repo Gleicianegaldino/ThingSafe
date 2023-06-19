@@ -6,20 +6,20 @@ import datetime
 import os
 import signal
 import sys
+import re
 
 from bd_manipulator import BDManipulator
 from json_manipulator import JSONManipulator
 from mqtt_communicator import MQTTCommunicator
 
-#Variáveis de controle do MQTT
+# Variáveis de controle do MQTT
 BROKER = "test.mosquitto.org"
 PORT = 1883
 KEEPALIVE = 60
 BIND = ""
 
-
 # Instanciar objetos
-bd_manipulator = BDManipulator("localhost", "root", "root", "Thingsafe", 3306)
+bd_manipulator = BDManipulator("localhost", "thingsafe", "thingsafe", "thingsafe", 3306)
 json_manipulator = JSONManipulator()
 mqtt_communicator = MQTTCommunicator(BROKER, PORT, KEEPALIVE, BIND)
 
@@ -46,23 +46,33 @@ signal.signal(signal.SIGINT, signal_handler)
 while True:
     mqtt_communicator.client.loop_start()
     
-    #Sobrecarga de método
-    def handle_message(client, userdata, msg):
+    # Sobrecarga de método
+    def handle_message(client, userdata, v):
         print("=============================")
-        print("Topic: " + str(msg.topic))
-        print("Payload: " + str(msg.payload))
+        print("Topic: " + str(v.topic))
+        print("Payload: " + str(v.payload))
         print("Hora: " + datetime.datetime.now(datetime.timezone.utc).strftime("%H:%M:%S"))
         print("=============================")
-        mensagem = int(msg.payload)
-        topico = str(msg.topic)
-        qos = msg.qos
-        data_hora_medicao = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        
-        #Nesse método pode ser feito o insert de qualquer banco, quando as classes forem criadas
-        bd_manipulator.insert_data(mensagem, topico, qos, data_hora_medicao)    
-    
+
+        payload_str = v.payload.decode()
+
+        mac_match = re.search(r"^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})", payload_str)
+        value_match = re.search(r"value:\s*(\d+)", payload_str)
+
+        if mac_match and value_match:
+            mac = mac_match.group()
+            value = int(value_match.group(1))
+
+            topico = v.topic
+            qos = v.qos
+            created_at = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+            # Inserir no banco de dados
+            bd_manipulator.insert_data(value, topico, qos, created_at)
+
+            bd_manipulator.execute_query("INSERT INTO smart_cone (mac) VALUES (%s)", (mac,))
 
     # Aguardar 1 segundo antes de executar novamente
     time.sleep(1)
-    #insert no DB
+    # insert no DB
     mqtt_communicator.client.on_message = handle_message

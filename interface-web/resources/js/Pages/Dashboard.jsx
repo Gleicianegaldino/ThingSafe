@@ -6,6 +6,7 @@ import ThreeColumnData from '@/Components/ThreeColumnData';
 import TwoColumnData from '@/Components/TwoColumnData';
 import Footer from '@/Layouts/Footer';
 import NavLink from '@/Components/NavLink';
+import AlertLink from '@/Components/AlertLink';
 
 export default function Dashboard({ auth }) {
 
@@ -65,28 +66,28 @@ export default function Dashboard({ auth }) {
 
     const dataTwoColumn = [
 
-    <NavLink href={route('dailyevents')} active={route().current('dailyevents')}>
+    <AlertLink href={route('dailyevents')} active={route().current('dailyevents')}>
         <LargeTextBlock key={1} text="Daily Events" number={dailyAlertCount.toString()} backgroundColor="#DC143C" alertColumnValue={dailyAlertCount}/>,
-    </NavLink>,
+    </AlertLink>,
 
-    <NavLink href={route('sectorslist')} active={route().current('sectorslist')}>
-        <LargeTextBlock key={2} text="Sectors" number="1" backgroundColor="#F4A460" />,
-    </NavLink>
+    <AlertLink href={route('sectorslist')} active={route().current('sectorslist')}>
+        <LargeTextBlock key={2} text="Sectors" number="1" backgroundColor="#F0F0F0" />,
+    </AlertLink>
 
     ];
     const dataThreeColumn = [
 
-    <NavLink href={route('weeklyevents')} active={route().current('weeklyevents')}>
-        <LargeTextBlock key={1} text="Weekly Events" number={weeklyAlertCount} backgroundColor="#FFA500" />,
-    </NavLink>,
+    <AlertLink href={route('weeklyevents')} active={route().current('weeklyevents')}>
+        <LargeTextBlock key={1} text="Weekly Events" number={weeklyAlertCount} backgroundColor="#F0F0F0" />,
+    </AlertLink>,
 
-    <NavLink href={route('monthlyevents')} active={route().current('monthlyevents')}>
-        <LargeTextBlock key={2} text="Monthly Events" number={monthlyAlertCount} backgroundColor="#32CD32" />,
-    </NavLink>, 
+    <AlertLink href={route('monthlyevents')} active={route().current('monthlyevents')}>
+        <LargeTextBlock key={2} text="Monthly Events" number={monthlyAlertCount} backgroundColor="#F0F0F0" />,
+    </AlertLink>, 
 
-    <NavLink href={route('annualevents')} active={route().current('annualevents')}>
-        <LargeTextBlock key={3} text="Annual Events" number={annualAlertCount} backgroundColor="#20B2AA" />,
-    </NavLink>
+    <AlertLink href={route('annualevents')} active={route().current('annualevents')}>
+        <LargeTextBlock key={3} text="Annual Events" number={annualAlertCount} backgroundColor="#F0F0F0" />,
+    </AlertLink>
 
     ];
 

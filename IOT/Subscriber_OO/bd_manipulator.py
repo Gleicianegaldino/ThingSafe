@@ -25,8 +25,8 @@ class BDManipulator:
             self.cursor.close()
             self.connection.close()
 
-    def insert_data(self, mensagem, topico, qos, data_hora_medicao):
-        data_hora_medicao
-        insert_query = "INSERT INTO Dispositivo(mensagem, topico, qos, data_hora_medicao) VALUES(%s, %s, %s, %s)"
-        self.cursor.execute(insert_query, (mensagem, topico, qos, data_hora_medicao))
+    def insert_data(self, value, topico, qos, created_at):
+        created_at
+        insert_query = "INSERT INTO alert_perimeter_break(value, topico, qos, created_at) VALUES(%s, %s, %s, %s)"
+        self.cursor.execute(insert_query, (value, topico, qos, created_at))
         self.connection.commit()
