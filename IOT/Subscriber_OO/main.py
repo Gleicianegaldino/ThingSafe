@@ -19,7 +19,7 @@ KEEPALIVE = 60
 BIND = ""
 
 # Instanciar objetos
-bd_manipulator = BDManipulator("localhost", "thingsafe", "thingsafe", "thingsafe", 3306)
+bd_manipulator = BDManipulator("localhost", "root", "root", "thingsafe", 3307)
 json_manipulator = JSONManipulator()
 mqtt_communicator = MQTTCommunicator(BROKER, PORT, KEEPALIVE, BIND)
 
@@ -30,7 +30,7 @@ bd_manipulator.connect()
 mqtt_communicator.connect()
 
 # Inscrever-se em vários tópicos/DEBUG
-topics = [("topic1", 0), ("123456789123", 1), ("dataSet", 2)]
+topics = [("topic1", 0), ("123456789123", 1), ("dataSet", 0)]
 mqtt_communicator.subscribe_to_topics(topics)
 
 # Função de tratamento de sinal para interromper o programa corretamente
@@ -48,29 +48,30 @@ while True:
     
     # Sobrecarga de método
     def handle_message(client, userdata, v):
+        payload_str = v.payload.decode()
+        mensagem = str(v.payload)
+        mac = mensagem.split(" ;")[0]
+        value = mensagem.split(" ;")[1]
+
         print("=============================")
         print("Topic: " + str(v.topic))
         print("Payload: " + str(v.payload))
+        print("Mac: " + str(mac))
+        print("value: " + value)
         print("Hora: " + datetime.datetime.now(datetime.timezone.utc).strftime("%H:%M:%S"))
-        print("=============================")
 
-        payload_str = v.payload.decode()
+        
+        
+        
+        
+        
 
-        mac_match = re.search(r"^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})", payload_str)
-        value_match = re.search(r"value:\s*(\d+)", payload_str)
+        # Insert into the database
+        
+        
+        #print("Invalid payload format")
 
-        if mac_match and value_match:
-            mac = mac_match.group()
-            value = int(value_match.group(1))
-
-            topico = v.topic
-            qos = v.qos
-            created_at = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-            # Inserir no banco de dados
-            bd_manipulator.insert_data(value, topico, qos, created_at)
-
-            bd_manipulator.execute_query("INSERT INTO smart_cone (mac) VALUES (%s)", (mac,))
+            # bd_manipulator.execute_query("INSERT INTO smart_cone (mac) VALUES (%s)", (mac,))
 
     # Aguardar 1 segundo antes de executar novamente
     time.sleep(1)

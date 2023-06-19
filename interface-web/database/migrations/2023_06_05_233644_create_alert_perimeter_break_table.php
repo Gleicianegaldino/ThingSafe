@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('alert_perimeter_break', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('topico');
+            $table->integer('value');
+            $table->string('topico');
             $table->integer('qos');
             $table->dateTime('created_at')->nullable();
 
