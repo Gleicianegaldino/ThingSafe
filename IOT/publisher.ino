@@ -5,15 +5,15 @@
 #include <user_interface.h>
 
 // ESP8266Wifi
-const char* ssid = "";        // network name
-const char* password = "";  // password
+const char* ssid = "";
+const char* password = "";
 
 // MQTT broker
 const char* mqttServer = "test.mosquitto.org";
 const int mqttPort = 1883;
 const char* mqttUser = "";
 const char* mqttPassword = "";
-const char* topicIdDevice = "dataSet";  // topic
+const char* topicIdDevice = "dataSet";
 
 WiFiClient espClient;
 PubSubClient client(espClient);
@@ -25,9 +25,6 @@ const int echoPin = 14;
 // sound velocity in cm/uS
 #define SOUND_VELOCITY 0.034
 
-
-#define LED D0  //Led in NodeMCU at pin GPIO16 (D0)
-
 const int buzzer = 15;  // D8
 
 // distance
@@ -38,9 +35,6 @@ float averageDistance;
 const int buttonPin = 13;  // D7
 int buttonState = 0;
 
-// calibration
-bool start = false;
-
 // calculate average distance
 const int bufferLength = 10;
 float distances[bufferLength];
@@ -50,14 +44,14 @@ void setup() {
   Serial.begin(9600);
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
+    delay(300);
     Serial.println("Connecting to WiFi...");
   }
   Serial.println("Connected to WiFi");
   client.setServer(mqttServer, mqttPort);
   while (!client.connect("NodeMCU", mqttUser, mqttPassword)) {
     Serial.println("Connecting to MQTT...");
-    delay(500);
+    delay(300);
   }
   Serial.println("Connected to MQTT");
 
@@ -67,10 +61,6 @@ void setup() {
 
   // button
   pinMode(buttonPin, INPUT);
-
-  start = false;
-  pinMode(LED, OUTPUT);  //LED pin as output
-  digitalWrite(LED, HIGH);
 }
 
 void calculateDistance() {
@@ -82,24 +72,17 @@ void calculateDistance() {
   delayMicroseconds(10);
   digitalWrite(trigPin, LOW);
 
-  // reads the echoPin, returns the sound wave travel time in microseconds
   long duration = pulseIn(echoPin, HIGH);
-
-  // calculate the distance
   distanceCm = duration * SOUND_VELOCITY / 2;
-
-  // Atualiza o valor do array distances com a distância capturada
   distances[bufferIndex] = distanceCm;
   bufferIndex = (bufferIndex + 1) % bufferLength;
 }
 
 void calculateAverageDistance() {
   float sum = 0;
-
   for (int i = 0; i < bufferLength; i++) {
     sum += distances[i];
   }
-
   averageDistance = sum / bufferLength;
 }
 
@@ -114,12 +97,10 @@ void sirenTurnOn() {
   unsigned long initialTime = millis();
 
   while (true) {
-    // Serial.println("Zig-Zig");
-
     tone(buzzer, 1500);
-    delay(500);
+    delay(300);
     noTone(buzzer);
-    delay(500);
+    delay(300);
 
     unsigned long currentTime = millis();
     unsigned long elapsedTime = currentTime - initialTime;
@@ -132,45 +113,46 @@ void sirenTurnOn() {
 
 void buttonAlert() {
   buttonState = digitalRead(buttonPin);
-
-  // checking if the button was pressed
-  if (buttonState == LOW) {
-    start = !start;
-    Serial.println("button pressed");
-  }
+  Serial.println(buttonState);
 }
 
-void loop() {
-  calculateDistance();
-  delay(1000);
-  calculateAverageDistance();
-
+void debug() {
   Serial.print("distanceCm: ");
   Serial.println(distanceCm);
   Serial.print("averageDistance: ");
   Serial.println(averageDistance);
-  Serial.print("\n");
-
-  Serial.println(start);
+  Serial.print("buttonAlert: ");
   buttonAlert();
-
+  Serial.print("checkPerimeterBreak: ");
   Serial.println(checkPerimeterBreak(distanceCm, averageDistance));
   Serial.print("\n");
+}
 
-  if (checkPerimeterBreak(distanceCm, averageDistance) && start) {
-    // publish
-    String macAddress = WiFi.macAddress();
+void loop() {
+  calculateDistance();
+  calculateAverageDistance();
+  debug();
 
-    Serial.print("mac: ");
-    Serial.println(macAddress);
-    char message[1000];
-    // 1 = true
-    int value = 1;
+  if (checkPerimeterBreak(distanceCm, averageDistance)) {
+    if (!buttonState) {
+      // publish
+      String macAddress = WiFi.macAddress();
+      char macAddressArray[18];
+      sprintf(macAddressArray, "%02X:%02X:%02X:%02X:%02X:%02X",
+              macAddress[0], macAddress[1], macAddress[2], macAddress[3], macAddress[4], macAddress[5]);
+      char message[1000];
+      // 1 = true
+      int value = 1;
 
-    snprintf(message, sizeof(message), "%02X:%02X:%02X:%02X:%02X:%02X; ALERT/ %d",
-             macAddress[0], macAddress[1], macAddress[2], macAddress[3], macAddress[4], macAddress[5], value);
-    client.publish(topicIdDevice, message);
-    sirenTurnOn();
-    start = false;
+      snprintf(message, sizeof(message), "%s ; %d", macAddressArray, value);
+
+      if (client.publish(topicIdDevice, message)) {
+        Serial.println("Message published successfully");
+      } else {
+        Serial.println("Failed to publish message");
+      }
+      sirenTurnOn();
+    }
   }
+  delay(1000);
 }

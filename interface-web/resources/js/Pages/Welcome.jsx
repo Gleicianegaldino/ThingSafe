@@ -35,15 +35,10 @@ export default function Welcome({ auth }) {
                 <div className="max-w-7xl mx-auto p-6 lg:p-8">
 
                     <div className="flex justify-center">
-                        <svg width="100" height="100" viewBox="0 0 171 171" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M73.875 33.8438V123.75H4.5V4.5H166.5V29.3438H78.375H73.875V33.8438Z" stroke="white" stroke-width="9" />
-                            <path d="M97.125 137.156V47.25H166.5V166.5H4.5V141.656H92.625H97.125V137.156Z" stroke="white" stroke-width="9" />
-                            <rect x="35.625" y="42.75" width="7.125" height="42.75" fill="white" />
-                            <ellipse cx="85.5" cy="85.5" rx="17.8125" ry="21.375" fill="white" />
-                            <rect x="128.25" y="85.5" width="7.125" height="42.75" fill="white" />
-                            <rect x="114" y="92.625" width="7.125" height="35.625" transform="rotate(-90 114 92.625)" fill="white" />
+                        <svg width="171" height="171" viewBox="0 0 171 171" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M78.375 42.8438V33.8438H87.375H162H171V24.8438V9V0H162H9H0V9V119.25V128.25H9H69.375H78.375V119.25V42.8438Z" fill="white" />
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M92.625 128.156V137.156H83.625H9H0V146.156V162V171H9H162H171V162V51.75V42.75H162H101.625H92.625V51.75V128.156Z" fill="white" />
                         </svg>
-
                     </div>
 
                     <div className="flex justify-center mt-16 px-6 sm:items-center sm:justify-between">

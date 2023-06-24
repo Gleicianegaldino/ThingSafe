@@ -19,7 +19,7 @@ KEEPALIVE = 60
 BIND = ""
 
 # Instanciar objetos
-bd_manipulator = BDManipulator("localhost", "root", "root", "thingsafe", 3307)
+bd_manipulator = BDManipulator("localhost", "user", "password", "thingsafe", 3306)
 json_manipulator = JSONManipulator()
 mqtt_communicator = MQTTCommunicator(BROKER, PORT, KEEPALIVE, BIND)
 
@@ -33,6 +33,7 @@ mqtt_communicator.connect()
 topics = [("topic1", 0), ("123456789123", 1), ("dataSet", 0)]
 mqtt_communicator.subscribe_to_topics(topics)
 
+
 # Função de tratamento de sinal para interromper o programa corretamente
 def signal_handler(signal, frame):
     print("Programa encerrado.")
@@ -40,38 +41,33 @@ def signal_handler(signal, frame):
     mqtt_communicator.disconnect()
     sys.exit(0)
 
+
 signal.signal(signal.SIGINT, signal_handler)
 
 # Loop principal
 while True:
     mqtt_communicator.client.loop_start()
-    
+
     # Sobrecarga de método
     def handle_message(client, userdata, v):
         payload_str = v.payload.decode()
         mensagem = str(v.payload)
-        mac = mensagem.split(" ;")[0]
-        value = mensagem.split(" ;")[1]
+        mac = str(mensagem.split(" ;")[0].strip().replace("'", ""))
+        value = int(mensagem.split(" ;")[1].strip().replace("'", ""))
 
         print("=============================")
         print("Topic: " + str(v.topic))
         print("Payload: " + str(v.payload))
         print("Mac: " + str(mac))
-        print("value: " + value)
-        print("Hora: " + datetime.datetime.now(datetime.timezone.utc).strftime("%H:%M:%S"))
+        print("value: " + str(value))
+        print(
+            "Hora: " + datetime.datetime.now(datetime.timezone.utc).strftime("%H:%M:%S")
+        )
 
-        
-        
-        
-        
-        
-
-        # Insert into the database
-        
-        
-        #print("Invalid payload format")
-
-            # bd_manipulator.execute_query("INSERT INTO smart_cone (mac) VALUES (%s)", (mac,))
+        bd_manipulator.connect()
+        smart_cone_id = bd_manipulator.insert_smart_cone(mac)
+        bd_manipulator.insert_alert(value, v.topic, v.qos, datetime.datetime.now(), smart_cone_id)
+        bd_manipulator.disconnect()
 
     # Aguardar 1 segundo antes de executar novamente
     time.sleep(1)
