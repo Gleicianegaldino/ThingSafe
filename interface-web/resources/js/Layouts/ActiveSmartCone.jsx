@@ -3,21 +3,47 @@ import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import { Link, useForm, usePage } from '@inertiajs/react';
+import { useState, useEffect } from 'react';    
 import { Transition } from '@headlessui/react';
 import Select from '@/Components/Select';
+import axios from 'axios';
 
 export default function ActiveSmartCone({ mustVerifyEmail, status, className = '' }) {
     const user = usePage().props.auth.user;
 
     const { data, setData, patch, errors, processing, recentlySuccessful } = useForm({
-        name: user.name,
-        email: user.email,
+        coneId: '',
+        sector: '',
     });
 
-    const submit = (e) => {
+    const [sectors, setSectors] = useState([]);
+
+    useEffect(() => {
+        fetchSectors();
+    }, []);
+
+    const fetchSectors = async () => {
+        try {
+            const response = await axios.get('/api/sectorslist');
+            setSectors(response.data);
+        } catch (error) {
+            console.error('Failed to fetch sectors:', error);
+        }
+    };
+
+    const submit = async (e) => {
         e.preventDefault();
 
-        patch(route('profile.update'));
+        try {
+            await axios.post('/api/smart-cones', {
+                coneId: data.coneId,
+                sector: data.sector,
+            });
+
+            patch(route('profile.update'));
+        } catch (error) {
+            console.error('Failed to activate smart cone:', error);
+        }
     };
 
     return (
@@ -37,14 +63,14 @@ export default function ActiveSmartCone({ mustVerifyEmail, status, className = '
                     <TextInput
                         id="coneId"
                         className="mt-1 block w-full"
-                        value={data.name}
+                        value={data.coneId}
                         onChange={(e) => setData('coneId', e.target.value)}
                         required
                         isFocused
                         autoComplete="coneId"
                     />
 
-                    <InputError className="mt-2" message={errors.name} />
+                    <InputError className="mt-2" message={errors.coneId} />
                 </div>
 
                 <div>
@@ -53,14 +79,18 @@ export default function ActiveSmartCone({ mustVerifyEmail, status, className = '
                     <Select
                         id="sector"
                         className="w-full"
-                        value={data.permission}
+                        value={data.sector}
                         onChange={(e) => setData('sector', e.target.value)}
                     >
-                        <option value="1">Sector 1</option>
-                        <option value="2">Sector 2</option>
+                        <option>Unlisted</option>
+                        {sectors.map((sector) => (
+                            <option key={sector.id} value={sector.id}>
+                                {sector.name}
+                            </option>
+                        ))}
                     </Select>
 
-                    <InputError message={errors.current_password} className="mt-2" />
+                    <InputError message={errors.sector} className="mt-2" />
                 </div>
 
                 {mustVerifyEmail && user.email_verified_at === null && (
@@ -93,10 +123,9 @@ export default function ActiveSmartCone({ mustVerifyEmail, status, className = '
                         enterFrom="opacity-0"
                         leaveTo="opacity-0"
                         className="transition ease-in-out"
-                    >
-                    </Transition>
+                    ></Transition>
                 </div>
             </form>
         </section>
-    )
+    );
 }

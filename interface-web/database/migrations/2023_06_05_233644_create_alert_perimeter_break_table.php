@@ -17,9 +17,7 @@ return new class extends Migration
             $table->string('topico');
             $table->integer('qos');
             $table->dateTime('created_at')->nullable();
-
-            $table->unsignedBigInteger('smart_cone_id');
-            $table->foreign('smart_cone_id')->references('id')->on('smart_cone');
+            $table->string('mac');
         });
     }
 

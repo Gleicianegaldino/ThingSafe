@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ApplicationLogo from '@/Components/ApplicationLogo';
 import Dropdown from '@/Components/Dropdown';
 import NavLink from '@/Components/NavLink';
@@ -7,6 +7,21 @@ import { Link } from '@inertiajs/react';
 
 export default function Authenticated({ user, header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
+
+    const [permissions, setPermissions] = useState([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const permissionsResponse = await axios.get('/api/permissions');
+                setPermissions(permissionsResponse.data);
+            } catch (error) {
+                console.error('Failed to fetch data:', error);
+            }
+        };
+
+        fetchData();
+    }, []);
 
     return (
         <div className="min-h-screen bg-gray-100">
@@ -55,11 +70,25 @@ export default function Authenticated({ user, header, children }) {
                                     </Dropdown.Trigger>
 
                                     <Dropdown.Content>
-                                        <Dropdown.Link href={route('profile.edit')}>Profile</Dropdown.Link>
-                                        <Dropdown.Link href={route('mycones')}>My Cones</Dropdown.Link>
-                                        <Dropdown.Link href={route('logout')} method="post" as="button">
-                                            Log Out
-                                        </Dropdown.Link>
+                                        {permissions.some(permission => permission.permission_id === 1 && permission.model_id === user.id) && (
+                                            <Dropdown.Link href={route('profile.edit')}>Profile</Dropdown.Link>
+                                        )}
+                                        {permissions.some(permission => permission.permission_id === 1 && permission.model_id === user.id) && (
+                                            <Dropdown.Link href={route('logout')} method="post" as="button">
+                                                Log Out
+                                            </Dropdown.Link>
+                                        )}
+                                        {permissions.some(permission => permission.permission_id === 2 && permission.model_id === user.id) && (
+                                            <Dropdown.Link href={route('profile.edit')}>Profile</Dropdown.Link>
+                                        )}
+                                        {permissions.some(permission => permission.permission_id === 2 && permission.model_id === user.id) && (
+                                            <Dropdown.Link href={route('mycones')}>My Cones</Dropdown.Link>
+                                        )}
+                                        {permissions.some(permission => permission.permission_id === 2 && permission.model_id === user.id) && (
+                                            <Dropdown.Link href={route('logout')} method="post" as="button">
+                                                Log Out
+                                            </Dropdown.Link>
+                                        )}
                                     </Dropdown.Content>
                                 </Dropdown>
                             </div>

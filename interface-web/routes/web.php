@@ -5,6 +5,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\SectorsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,16 +51,19 @@ Route::get('/annualevents', function () {
     return Inertia::render('AnnualEvents');
 })->middleware(['auth', 'verified'])->name('annualevents');
 
-Route::get('/sectorslist', function () {
-    return Inertia::render('SectorsList');
-})->middleware(['auth', 'verified'])->name('sectorslist');
-
+Route::get('/registersectors', function () {
+    return Inertia::render('RegisterSectors');
+})->middleware(['auth', 'verified'])->name('registersectors');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+Route::post('/registersectors', [SectorsController::class, 'store'])->name('registersectors');
+
+Route::get('/api/sectorslist', [SectorsController::class, 'index']);
 
 Route::get('/api/permissions', function () {
     $permission = DB::table('model_has_permissions')->select('permission_id', 'model_id')->get();

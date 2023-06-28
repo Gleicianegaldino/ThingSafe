@@ -11,12 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('smart_cone', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('mac');
-
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
+        Schema::create('sectors', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->dateTime('created_at')->nullable();
         });
     }
 
@@ -25,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('smart_cone');
+        Schema::dropIfExists('sectors');
     }
 };

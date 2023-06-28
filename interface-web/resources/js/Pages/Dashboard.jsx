@@ -1,12 +1,9 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link } from '@inertiajs/react';
 import React, { useState, useEffect } from 'react';
-import LargeTextBlock from '@/Components/LargeTextBlock';
-import ThreeColumnData from '@/Components/ThreeColumnData';
-import TwoColumnData from '@/Components/TwoColumnData';
 import Footer from '@/Layouts/Footer';
-import NavLink from '@/Components/NavLink';
-import AlertLink from '@/Components/AlertLink';
+import OperatorDashboard from './Permissions/OperatorDashboard';
+import AdminDashboard from './Permissions/AdminDashboard';
 
 export default function Dashboard({ auth }) {
 
@@ -15,7 +12,7 @@ export default function Dashboard({ auth }) {
     const [weeklyAlertCount, setWeeklyAlertCount] = useState([]);
     const [monthlyAlertCount, setMonthlyAlertCount] = useState([]);
     const [annualAlertCount, setAnnualAlertCount] = useState([]);
-    
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -45,52 +42,6 @@ export default function Dashboard({ auth }) {
         fetchData();
     }, []);
 
-    const renderContent = () => {
-
-        const permissionIds = permissions.map(permission => permission.permission_id);
-
-        if (permissionIds.includes(1)) {
-            return (
-                <div>
-                    <p>Admin</p>
-                </div>
-            )
-        } else if (permissionIds.includes(2)) {
-            return (
-                <div>
-                    <p>Operator</p>
-                </div>
-            )
-        }
-    };
-
-    const dataTwoColumn = [
-
-    <AlertLink href={route('dailyevents')} active={route().current('dailyevents')}>
-        <LargeTextBlock key={1} text="Daily Events" number={dailyAlertCount.toString()} backgroundColor="#DC143C" alertColumnValue={dailyAlertCount}/>,
-    </AlertLink>,
-
-    <AlertLink href={route('sectorslist')} active={route().current('sectorslist')}>
-        <LargeTextBlock key={2} text="Sectors" number="1" backgroundColor="#F0F0F0" />,
-    </AlertLink>
-
-    ];
-    const dataThreeColumn = [
-
-    <AlertLink href={route('weeklyevents')} active={route().current('weeklyevents')}>
-        <LargeTextBlock key={1} text="Weekly Events" number={weeklyAlertCount} backgroundColor="#F0F0F0" />,
-    </AlertLink>,
-
-    <AlertLink href={route('monthlyevents')} active={route().current('monthlyevents')}>
-        <LargeTextBlock key={2} text="Monthly Events" number={monthlyAlertCount} backgroundColor="#F0F0F0" />,
-    </AlertLink>, 
-
-    <AlertLink href={route('annualevents')} active={route().current('annualevents')}>
-        <LargeTextBlock key={3} text="Annual Events" number={annualAlertCount} backgroundColor="#F0F0F0" />,
-    </AlertLink>
-
-    ];
-
     return (
         <><AuthenticatedLayout
             user={auth.user}
@@ -102,9 +53,21 @@ export default function Dashboard({ auth }) {
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-6 text-gray-900">
-                            {renderContent()}
-                            <TwoColumnData data={dataTwoColumn} />
-                            <ThreeColumnData data={dataThreeColumn} />
+                            {permissions.some(permission => permission.permission_id === 1 && permission.model_id === auth.user.id) ? (
+                                <AdminDashboard
+                                    dailyAlertCount={dailyAlertCount}
+                                    weeklyAlertCount={weeklyAlertCount}
+                                    monthlyAlertCount={monthlyAlertCount}
+                                    annualAlertCount={annualAlertCount}
+                                />
+                            ) : permissions.some(permission => permission.permission_id === 2 && permission.model_id === auth.user.id) ? (
+                                <OperatorDashboard
+                                    dailyAlertCount={dailyAlertCount}
+                                    weeklyAlertCount={weeklyAlertCount}
+                                    monthlyAlertCount={monthlyAlertCount}
+                                    annualAlertCount={annualAlertCount}
+                                />
+                            ) : null}
                         </div>
                     </div>
                 </div>
