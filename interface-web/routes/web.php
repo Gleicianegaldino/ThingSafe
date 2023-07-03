@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\SectorsController;
+use App\Http\Controllers\SmartConeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -114,6 +115,9 @@ Route::get('/api/annualAlertCount', function () {
 
     return response()->json(['annualCount' => $sum]);
 });
+
+Route::post('/api/smart-cones', [SmartConeController::class, 'store']);
+
 
 
 require __DIR__.'/auth.php';
