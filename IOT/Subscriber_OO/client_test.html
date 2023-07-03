@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>WebSocket Client</title>
+    <script>
+        var socket;
+
+        function connect() {
+            var serverUrl = "ws://localhost:8769/";
+            socket = new WebSocket(serverUrl);
+
+            socket.onopen = function (event) {
+                console.log("WebSocket connected");
+            };
+
+            socket.onmessage = function (event) {
+                var message = JSON.parse(event.data);
+                var topic = message.topic;
+                var payload = message.payload;
+
+                // Exibir a mensagem recebida na página
+                var messageDiv = document.createElement("div");
+                messageDiv.innerHTML = "Topic: " + topic + "<br>Payload: " + payload;
+                document.getElementById("messages").appendChild(messageDiv);
+            };
+
+            socket.onclose = function (event) {
+                console.log("WebSocket disconnected");
+            };
+        }
+
+        function sendMessage() {
+            var topic = document.getElementById("topic").value;
+            var payload = document.getElementById("payload").value;
+
+            if (socket && socket.readyState === WebSocket.OPEN) {
+                var message = {
+                    topic: topic,
+                    payload: payload
+                };
+                socket.send(JSON.stringify(message));
+            }
+        }
+    </script>
+</head>
+<body onload="connect()">
+    <h1>WebSocket Client</h1>
+    <div id="messages"></div>
+    <div>
+        <input type="text" id="topic" placeholder="Topic">
+        <input type="text" id="payload" placeholder="Payload">
+        <button onclick="sendMessage()">Enviar</button>
+    </div>
+</body>
+</html>
