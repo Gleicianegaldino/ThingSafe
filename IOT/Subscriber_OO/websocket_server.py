@@ -6,6 +6,7 @@ class WebSocketServer:
         self.host = host
         self.port = port
         self.connected_clients = set()
+        self.server = None
 
     async def handle_websocket(self, client, path):
         # Adicionar o cliente à lista de clientes conectados
@@ -26,15 +27,13 @@ class WebSocketServer:
 
     def run_server(self):
         # Iniciar o servidor WebSocket
-        start_server = websockets.serve(self.handle_websocket, self.host, self.port)
+        self.server = websockets.serve(self.handle_websocket, self.host, self.port)
 
         # Executar o servidor em um loop de eventos
-        asyncio.get_event_loop().run_until_complete(start_server)
+        asyncio.get_event_loop().run_until_complete(self.server)
         asyncio.get_event_loop().run_forever()
 
     def stop_server(self):
         if self.server:
             self.server.close()
-            asyncio.get_event_loop().run_until_complete(self.server.wait_closed())
-
-    
+            

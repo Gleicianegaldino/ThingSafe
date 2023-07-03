@@ -1,10 +1,9 @@
 import pymysql
 
-
 class BDManipulator:
-    def __init__(self, host, user, password, database, port=3306):
+    def __init__(self, host, username, password, database, port=3306):
         self.host = host
-        self.user = user
+        self.username = username
         self.password = password
         self.database = database
         self.port = port
@@ -15,22 +14,21 @@ class BDManipulator:
         self.connection = pymysql.connect(
             host=self.host,
             port=self.port,
-            user=self.user,
+            user=self.username,
             password=self.password,
-            database=self.database,
+            database=self.database
         )
         self.cursor = self.connection.cursor()
 
     def disconnect(self):
-        if self.connection and self.cursor:
+        if self.connection is not None and self.cursor is not None:
             self.cursor.close()
             self.connection.close()
 
-    def insert_alert(self, value, topico, qos, created_at, smart_cone_id):
-        created_at
-        insert_query = "INSERT INTO alert_perimeter_break(value, topico, qos, created_at, smart_cone_id) VALUES(%s, %s, %s, %s, %s)"
+    def insert_alert(self, value, topic, qos, created_at, smart_cone_id):
+        insert_query = "INSERT INTO alert_perimeter_break (value, topic, qos, created_at, smart_cone_id) VALUES (%s, %s, %s, %s, %s)"
         self.cursor.execute(
-            insert_query, (value, topico, qos, created_at, smart_cone_id)
+            insert_query, (value, topic, qos, created_at, smart_cone_id)
         )
         self.connection.commit()
 
@@ -40,7 +38,7 @@ class BDManipulator:
         result = self.cursor.fetchone()
 
         if result is None:
-            insert_query = "INSERT INTO smart_cone(mac) VALUES(%s)"
+            insert_query = "INSERT INTO smart_cone (mac) VALUES (%s)"
             self.cursor.execute(insert_query, (mac,))
             self.connection.commit()
             return self.cursor.lastrowid
