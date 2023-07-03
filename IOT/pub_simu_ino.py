@@ -18,7 +18,7 @@ client.connect(BROKER, PORT, KEEPALIVE)
 # Função para publicar um dado fictício
 def publish_fake_data():
     mac_address = "00:11:22:33:44:55"  # Endereço MAC fictício
-    value = random.randint(0, 1)  # Valor aleatório (0 ou 1)
+    value = 1
 
     message = "{} ; {}".format(mac_address, value)
 

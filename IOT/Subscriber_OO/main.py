@@ -98,7 +98,7 @@ def handle_message(client, userdata, v):
 
     bd_manipulator.connect()
     # smart_cone_id = bd_manipulator.insert_smart_cone(mac)
-    # bd_manipulator.insert_alert(value, v.topic, v.qos, datetime.datetime.now(), smart_cone_id)
+    bd_manipulator.insert_alert(value, v.topic, v.qos, datetime.datetime.now(), "00:11:22:33:44:55")
     bd_manipulator.disconnect()
     websocket_client.send_message(v.topic, payload_str)
 

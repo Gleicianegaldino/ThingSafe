@@ -25,10 +25,10 @@ class BDManipulator:
             self.cursor.close()
             self.connection.close()
 
-    def insert_alert(self, value, topic, qos, created_at, smart_cone_id):
-        insert_query = "INSERT INTO alert_perimeter_break (value, topic, qos, created_at, smart_cone_id) VALUES (%s, %s, %s, %s, %s)"
+    def insert_alert(self, value, topic, qos, created_at, mac):
+        insert_query = "INSERT INTO alert_perimeter_break (value, topico, qos, created_at, mac) VALUES (%s, %s, %s, %s, %s)"
         self.cursor.execute(
-            insert_query, (value, topic, qos, created_at, smart_cone_id)
+            insert_query, (value, topic, qos, created_at, mac)
         )
         self.connection.commit()
 
