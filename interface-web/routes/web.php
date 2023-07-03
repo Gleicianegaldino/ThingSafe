@@ -7,6 +7,7 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\SectorsController;
 use App\Http\Controllers\SmartConeController;
+use App\Models\Sector;
 
 /*
 |--------------------------------------------------------------------------
@@ -120,5 +121,11 @@ Route::post('/api/smart-cones', [SmartConeController::class, 'store']);
 
 Route::get('/daily-events', [SmartConeController::class, 'getDailyEvents']);
 
+Route::get('/sum-of-sectors', function () {
+    $sectors = Sector::all();
+    $total = $sectors->count();
+
+    return response()->json(['total_sectors' => $total]);
+});
 
 require __DIR__.'/auth.php';
