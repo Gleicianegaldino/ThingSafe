@@ -118,6 +118,7 @@ Route::get('/api/annualAlertCount', function () {
 
 Route::post('/api/smart-cones', [SmartConeController::class, 'store']);
 
+Route::get('/daily-events', [SmartConeController::class, 'getDailyEvents']);
 
 
 require __DIR__.'/auth.php';

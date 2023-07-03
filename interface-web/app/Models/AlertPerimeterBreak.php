@@ -7,5 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class AlertPerimeterBreak extends Model
 {
-    use HasFactory;
+    protected $table = 'alert_perimeter_break';
+    public $timestamps = false;
+
+    
+    
 }
