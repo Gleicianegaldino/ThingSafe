@@ -13,7 +13,7 @@ export default function Dashboard({ auth }) {
     const [weeklyAlertCount, setWeeklyAlertCount] = useState([]);
     const [monthlyAlertCount, setMonthlyAlertCount] = useState([]);
     const [annualAlertCount, setAnnualAlertCount] = useState([]);
-    const [sectorCount, setSectorCount] = useState(0);
+    const [sectorCount, setSectorCount] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -42,6 +42,7 @@ export default function Dashboard({ auth }) {
             } catch (error) {
                 console.error('Failed to fetch data:', error);
             }
+            
         };
 
         fetchData();

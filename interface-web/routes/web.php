@@ -132,6 +132,7 @@ Route::post('/api/smart-cones', [SmartConeController::class, 'store']);
 Route::get('/events/{unit}', [SmartConeController::class, 'getEventsByTimeUnit']);//o unit é a unidade de tempo que pode ser:
 //day,week,month,year
 
+Route::get('/events/total/{unit}', [SmartConeController::class, 'getTotalEventsByTimeUnit']);//quantia total
 
 Route::get('/sum-of-sectors', function () {
     $sectors = Sector::all();

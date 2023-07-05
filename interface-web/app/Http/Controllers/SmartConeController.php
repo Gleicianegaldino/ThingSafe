@@ -8,9 +8,12 @@ use App\Models\Sector;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Spatie\Permission\Traits\HasRoles;
 
 class SmartConeController extends Controller
 {
+    use HasRoles;
+
     public function store(Request $request)
     {
         try {
@@ -36,7 +39,7 @@ class SmartConeController extends Controller
     {
         $startDate = Carbon::now();
         $endDate = Carbon::now();
-    
+
         // Definir o período de tempo com base na unidade fornecida
         if ($unit === 'day') {
             $startDate->startOfDay();
@@ -53,28 +56,80 @@ class SmartConeController extends Controller
         } else {
             return response()->json(['error' => 'Unidade de tempo inválida.']);
         }
-    
-        $events = AlertPerimeterBreak::whereBetween('created_at', [$startDate, $endDate])->get();
+
+        $user = auth()->user();
+
+        if ($user->hasPermissionTo('admin')) {
+            // Usuário tem permissão de administrador, buscar todos os eventos
+            $events = AlertPerimeterBreak::whereBetween('created_at', [$startDate, $endDate])->get();
+        } elseif ($user->hasPermissionTo('operator')) {
+            // Usuário tem permissão de operador, buscar eventos associados aos cones do usuário
+            $userMacs = SmartCone::where('user_id', $user->id)->pluck('mac')->toArray();
+            $events = AlertPerimeterBreak::whereIn('mac', $userMacs)
+                ->whereBetween('created_at', [$startDate, $endDate])
+                ->get();
+        } else {
+            return response()->json(['error' => 'Usuário sem permissão.']);
+        }
+
         $eventsWithDetails = [];
-    
+
         foreach ($events as $event) {
             $smartCone = SmartCone::where('mac', $event->mac)->first();
-    
+
             if ($smartCone) {
                 $sector = Sector::find($smartCone->sector_id);
                 $responsaveis = User::where('id', $smartCone->user_id)->pluck('name')->toArray();
-    
+
                 $eventDetails = [
                     'setor' => $sector ? $sector->name : 'Unknown',
                     'responsavel' => implode(', ', $responsaveis),
                     'created_at' => $event->created_at,
                 ];
-    
+
                 $eventsWithDetails[] = $eventDetails;
             }
         }
-    
+
         return response()->json($eventsWithDetails);
+    }
+
+
+    public function getTotalEventsByTimeUnit($unit)
+    {
+        $startDate = Carbon::now();
+        $endDate = Carbon::now();
+    
+        // Definir o período de tempo com base na unidade fornecida
+        if ($unit === 'day') {
+            $startDate->startOfDay();
+            $endDate->endOfDay();
+        } elseif ($unit === 'week') {
+            $startDate->subDays(7); // Modificação: Subtrai 7 dias da data atual
+        } elseif ($unit === 'month') {
+            $startDate->subDays(30); // Modificação: Subtrai 30 dias da data atual
+        } elseif ($unit === 'year') {
+            $startDate->subDays(365); // Modificação: Subtrai 365 dias da data atual
+        } else {
+            return response()->json(['error' => 'Unidade de tempo inválida.']);
+        }
+    
+        $user = auth()->user();
+    
+        if ($user->hasPermissionTo('admin')) {
+            // Usuário tem permissão de administrador, buscar todos os eventos
+            $totalEvents = AlertPerimeterBreak::whereBetween('created_at', [$startDate, $endDate])->count();
+        } elseif ($user->hasPermissionTo('operator')) {
+            // Usuário tem permissão de operador, buscar eventos associados aos cones do usuário
+            $userMacs = SmartCone::where('user_id', $user->id)->pluck('mac')->toArray();
+            $totalEvents = AlertPerimeterBreak::whereIn('mac', $userMacs)
+                ->whereBetween('created_at', [$startDate, $endDate])
+                ->count();
+        } else {
+            return response()->json(['error' => 'Usuário sem permissão.']);
+        }
+    
+        return response()->json(['totalEvents' => $totalEvents]);
     }
     
 }
