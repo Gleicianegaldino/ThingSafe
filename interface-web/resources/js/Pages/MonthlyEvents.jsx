@@ -55,7 +55,7 @@ export default function DailyEvents({ auth }) {
                                 ) : events.length > 0 ? (
                                     <EventList events={events} />
                                 ) : (
-                                    <div className="text-center text-gray-500">Nenhum evento!</div>
+                                    <div className="text-center text-gray-500">Nenhuma invasão no mês</div>
                                 )}
                             </div>
                         </div>
