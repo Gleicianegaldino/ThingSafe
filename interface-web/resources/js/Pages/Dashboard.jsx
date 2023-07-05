@@ -21,24 +21,20 @@ export default function Dashboard({ auth }) {
                 const permissionsResponse = await axios.get('/api/permissions');
                 setPermissions(permissionsResponse.data);
 
-                const dailyAlertCountResponse = await axios.get('/api/dailyAlertCount');
-                const { dailyCount } = dailyAlertCountResponse.data;
-                setDailyAlertCount(dailyCount);
+                const dailyAlertCountResponse = await axios.get('/events/total/day');
+                setDailyAlertCount(dailyAlertCountResponse.data.totalEvents);
 
                 const sumSectors = await axios.get('/api/sumSectors');
                 setSectorCount(sumSectors.data.sectorCount);
 
-                const weeklyAlertCountResponse = await axios.get('/api/weeklyAlertCount');
-                const { weeklyCount } = weeklyAlertCountResponse.data;
-                setWeeklyAlertCount(weeklyCount);
+                const weeklyAlertCountResponse = await axios.get('/events/total/week');
+                setWeeklyAlertCount(weeklyAlertCountResponse.data.totalEvents);
 
-                const monthlyAlertCountResponse = await axios.get('/api/monthlyAlertCount');
-                const { monthlyCount } = monthlyAlertCountResponse.data;
-                setMonthlyAlertCount(monthlyCount);
+                const monthlyAlertCountResponse = await axios.get('/events/total/month');
+                setMonthlyAlertCount(monthlyAlertCountResponse.data.totalEvents);
 
-                const annualAlertCountResponse = await axios.get('/api/annualAlertCount');
-                const { annualCount } = annualAlertCountResponse.data;
-                setAnnualAlertCount(annualCount);
+                const annualAlertCountResponse = await axios.get('/events/total/year');
+                setAnnualAlertCount(annualAlertCountResponse.data.totalEvents);
             } catch (error) {
                 console.error('Failed to fetch data:', error);
             }

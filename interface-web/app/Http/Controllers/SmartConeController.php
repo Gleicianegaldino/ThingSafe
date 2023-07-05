@@ -129,7 +129,7 @@ class SmartConeController extends Controller
             return response()->json(['error' => 'Usuário sem permissão.']);
         }
     
-        return response()->json(['totalEvents' => $totalEvents]);
+        return response()->json(['totalEvents' => (string)$totalEvents]);
     }
     
 }

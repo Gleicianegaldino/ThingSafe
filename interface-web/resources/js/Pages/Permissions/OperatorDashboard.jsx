@@ -4,6 +4,7 @@ import ThreeColumnData from '@/Components/ThreeColumnData';
 import AlertLink from '@/Components/AlertLink';
 
 const OperatorDashboard = ({ dailyAlertCount, weeklyAlertCount, monthlyAlertCount, annualAlertCount }) => {
+    
 
     const dataThreeColumnOperator = [
         <AlertLink href={route('weeklyevents')} active={route().current('weeklyevents')}>
