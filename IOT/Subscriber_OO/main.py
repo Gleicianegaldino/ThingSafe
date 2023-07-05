@@ -82,14 +82,15 @@ signal.signal(signal.SIGINT, signal_handler)
 
 # Sobrecarga de método
 def handle_message(client, userdata, v):
-    payload_str = v.payload.decode()
-    mensagem = str(v.payload)
+    payload_str = v.payload.decode()  # Converter o payload em uma string
+    mensagem = payload_str  # Usar a string convertida como mensagem
+
     mac = str(mensagem.split(" ;")[0].strip().replace("'", ""))
     value = int(mensagem.split(" ;")[1].strip().replace("'", ""))
 
     print("=============================")
     print("Topic: " + str(v.topic))
-    print("Payload: " + str(v.payload))
+    print("Payload: " + str(payload_str))  # Usar a string convertida aqui
     print("Mac: " + str(mac))
     print("value: " + str(value))
     print(
@@ -101,6 +102,7 @@ def handle_message(client, userdata, v):
     bd_manipulator.insert_alert(value, v.topic, v.qos, datetime.datetime.now(), mac)
     bd_manipulator.disconnect()
     websocket_client.send_message(v.topic, payload_str)
+
 
 
 # Iniciar o servidor WebSocket em uma nova thread
