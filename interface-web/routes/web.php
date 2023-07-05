@@ -140,4 +140,9 @@ Route::get('/sum-of-sectors', function () {
     return response()->json(['total_sectors' => $total]);
 });
 
+Route::delete('/sectors/{name}', [SectorsController::class,'destroy']);//tem que colocar o nome do setor no link
+
+Route::get('/sectors/distinct', [SectorsController::class,'getDistinctSectors']);//como se fosse um index dos setores
+
+
 require __DIR__.'/auth.php';
