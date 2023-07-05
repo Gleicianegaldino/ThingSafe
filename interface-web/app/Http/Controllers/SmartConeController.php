@@ -32,30 +32,49 @@ class SmartConeController extends Controller
         }
     }
 
-    public function getDailyEvents()
+    public function getEventsByTimeUnit($unit)
     {
-        $today = Carbon::now()->format('Y-m-d');
-        $events = AlertPerimeterBreak::whereDate('created_at', $today)->get();
-
+        $startDate = Carbon::now();
+        $endDate = Carbon::now();
+    
+        // Definir o período de tempo com base na unidade fornecida
+        if ($unit === 'day') {
+            $startDate->startOfDay();
+            $endDate->endOfDay();
+        } elseif ($unit === 'week') {
+            $startDate->startOfWeek();
+            $endDate->endOfWeek();
+        } elseif ($unit === 'month') {
+            $startDate->startOfMonth();
+            $endDate->endOfMonth();
+        } elseif ($unit === 'year') {
+            $startDate->startOfYear();
+            $endDate->endOfYear();
+        } else {
+            return response()->json(['error' => 'Unidade de tempo inválida.']);
+        }
+    
+        $events = AlertPerimeterBreak::whereBetween('created_at', [$startDate, $endDate])->get();
         $eventsWithDetails = [];
-
+    
         foreach ($events as $event) {
             $smartCone = SmartCone::where('mac', $event->mac)->first();
-
+    
             if ($smartCone) {
                 $sector = Sector::find($smartCone->sector_id);
                 $responsaveis = User::where('id', $smartCone->user_id)->pluck('name')->toArray();
-
+    
                 $eventDetails = [
                     'setor' => $sector ? $sector->name : 'Unknown',
                     'responsavel' => implode(', ', $responsaveis),
                     'created_at' => $event->created_at,
                 ];
-
+    
                 $eventsWithDetails[] = $eventDetails;
             }
         }
-
+    
         return response()->json($eventsWithDetails);
     }
+    
 }

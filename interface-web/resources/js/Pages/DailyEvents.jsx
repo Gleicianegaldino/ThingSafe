@@ -10,7 +10,7 @@ export default function DailyEvents({ auth }) {
 
   const fetchEvents = async () => {
     try {
-      const response = await axios.get('/daily-events');
+      const response = await axios.get('/events/day');//passando a rota com o parametro de dia
       setEvents(response.data);
     } catch (error) {
       console.error('Failed to fetch daily events:', error);
