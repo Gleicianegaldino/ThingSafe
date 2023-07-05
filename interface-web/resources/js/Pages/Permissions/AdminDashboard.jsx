@@ -4,13 +4,13 @@ import ThreeColumnData from '@/Components/ThreeColumnData';
 import TwoColumnData from '@/Components/TwoColumnData';
 import AlertLink from '@/Components/AlertLink';
 
-const AdminDashboard = ({ dailyAlertCount, weeklyAlertCount, monthlyAlertCount, annualAlertCount }) => {
+const AdminDashboard = ({ dailyAlertCount, weeklyAlertCount, monthlyAlertCount, annualAlertCount ,sectorCount}) => {
     const dataTwoColumnAdmin = [
         <AlertLink href={route('dailyevents')} active={route().current('dailyevents')}>
             <LargeTextBlock key={1} text="Daily Events" number={dailyAlertCount.toString()} backgroundColor="#DC143C" alertColumnValue={dailyAlertCount} />
         </AlertLink>,
         <AlertLink href={route('registersectors')} active={route().current('registersectors')}>
-            <LargeTextBlock key={2} text="Sectors" number="1" backgroundColor="#BDB76B" />
+            <LargeTextBlock key={2} text="Sectors" number={sectorCount} backgroundColor="#BDB76B" />
         </AlertLink>
     ];
 

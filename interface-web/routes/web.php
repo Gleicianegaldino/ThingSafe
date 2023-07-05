@@ -72,6 +72,16 @@ Route::get('/api/permissions', function () {
     return response()->json($permission);
 });
 
+
+Route::get('/api/sumSectors', function () {
+    $count = DB::table('sectors')
+        ->selectRaw('COUNT(DISTINCT name) as sectorCount')
+        ->value('sectorCount');
+
+    return response()->json(['sectorCount' => $count]);
+});
+
+
 Route::get('/api/dailyAlertCount', function () {
     $sum = DB::table('alert_perimeter_break')
         ->whereDate('created_at', today())

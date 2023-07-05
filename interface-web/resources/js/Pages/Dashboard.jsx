@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Footer from '@/Layouts/Footer';
 import OperatorDashboard from './Permissions/OperatorDashboard';
 import AdminDashboard from './Permissions/AdminDashboard';
+import axios from 'axios';
 
 export default function Dashboard({ auth }) {
 
@@ -12,6 +13,7 @@ export default function Dashboard({ auth }) {
     const [weeklyAlertCount, setWeeklyAlertCount] = useState([]);
     const [monthlyAlertCount, setMonthlyAlertCount] = useState([]);
     const [annualAlertCount, setAnnualAlertCount] = useState([]);
+    const [sectorCount, setSectorCount] = useState(0);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -22,6 +24,9 @@ export default function Dashboard({ auth }) {
                 const dailyAlertCountResponse = await axios.get('/api/dailyAlertCount');
                 const { dailyCount } = dailyAlertCountResponse.data;
                 setDailyAlertCount(dailyCount);
+
+                const sumSectors = await axios.get('/api/sumSectors');
+                setSectorCount(sumSectors.data.sectorCount);
 
                 const weeklyAlertCountResponse = await axios.get('/api/weeklyAlertCount');
                 const { weeklyCount } = weeklyAlertCountResponse.data;
@@ -59,6 +64,7 @@ export default function Dashboard({ auth }) {
                                     weeklyAlertCount={weeklyAlertCount}
                                     monthlyAlertCount={monthlyAlertCount}
                                     annualAlertCount={annualAlertCount}
+                                    sectorCount = {sectorCount}
                                 />
                             ) : permissions.some(permission => permission.permission_id === 2 && permission.model_id === auth.user.id) ? (
                                 <OperatorDashboard
