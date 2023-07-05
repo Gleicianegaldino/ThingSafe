@@ -13,21 +13,22 @@ export default function RegisterSectors({ auth }) {
     name: '',
   });
 
-  const submit = (e) => {
+
+  const submit = async (e) => {
     e.preventDefault();
 
-    post(route('registersectors'), data);
+    await post(route('registersectors'), data);
+    window.location.reload(); // Recarregar a página após o envio do formulário
   };
 
   const handleDelete = async (name) => {
     try {
       await axios.delete(`/sectors/${name}`);
-      fetchSectors();
+      
     } catch (error) {
       console.error('Failed to delete sector:', error);
     }
   };
-
   return (
     <>
       <AuthenticatedLayout user={auth.user} header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Sectors</h2>}>

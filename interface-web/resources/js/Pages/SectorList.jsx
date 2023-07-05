@@ -17,6 +17,11 @@ const SectorList = ({ handleDelete }) => {
     fetchSectors();
   }, []);
 
+  const handleDeleteAndReload = async (name) => {
+    await handleDelete(name);
+    window.location.reload(); // Recarregar a página após a exclusão
+  };
+
   return (
     <section>
       <header>
@@ -27,7 +32,7 @@ const SectorList = ({ handleDelete }) => {
         {sectors.map((sector) => (
           <li key={sector} className="flex items-center justify-between bg-gray-100 rounded p-2">
             <span>{sector}</span>
-            <button onClick={() => handleDelete(sector)} className="text-red-500 hover:text-red-700">Delete</button>
+            <button onClick={() => handleDeleteAndReload(sector)} className="text-red-500 hover:text-red-700">Delete</button>
           </li>
         ))}
       </ul>
