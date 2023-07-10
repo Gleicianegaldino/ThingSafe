@@ -40,13 +40,16 @@ class SmartConeController extends Controller
         $startDate = Carbon::now();
         $endDate = Carbon::now();
 
+        $now = date('Y-m-d H:i:s');
+        $dayOfWeek = date('w', strtotime($now));
+        
         // Definir o período de tempo com base na unidade fornecida
         if ($unit === 'day') {
             $startDate->startOfDay();
             $endDate->endOfDay();
         } elseif ($unit === 'week') {
-            $startDate->startOfWeek();
-            $endDate->endOfWeek();
+            $startDate->startOfWeek()->subWeek();
+            $endDate->endOfWeek()->subWeek();
         } elseif ($unit === 'month') {
             $startDate->startOfMonth();
             $endDate->endOfMonth();
