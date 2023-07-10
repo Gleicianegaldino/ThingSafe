@@ -145,5 +145,10 @@ Route::delete('/sectors/{name}', [SectorsController::class,'destroy']);//tem que
 
 Route::get('/sectors/distinct', [SectorsController::class,'getDistinctSectors']);//como se fosse um index dos setores
 
+Route::put('/cones/update/{mac}', [SmartConeController::class, 'update']);
+Route::delete('/cones/destroy/{mac}', [SmartConeController::class, 'destroy']);
+
+Route::get('/cones', [SmartConeController::class, 'show']);
+
 
 require __DIR__.'/auth.php';

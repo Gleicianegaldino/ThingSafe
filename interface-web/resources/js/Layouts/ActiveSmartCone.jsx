@@ -19,9 +19,11 @@ export default function ActiveSmartCone({ mustVerifyEmail, status, className = '
   });
 
   const [sectors, setSectors] = useState([]);
+  const [cones, setCones] = useState([]);
 
   useEffect(() => {
     fetchSectors();
+    fetchCones();
   }, []);
 
   const fetchSectors = async () => {
@@ -30,6 +32,15 @@ export default function ActiveSmartCone({ mustVerifyEmail, status, className = '
       setSectors(response.data);
     } catch (error) {
       console.error('Failed to fetch sectors:', error);
+    }
+  };
+
+  const fetchCones = async () => {
+    try {
+      const response = await axios.get('/cones');
+      setCones(response.data);
+    } catch (error) {
+      console.error('Failed to fetch cones:', error);
     }
   };
 
@@ -48,8 +59,46 @@ export default function ActiveSmartCone({ mustVerifyEmail, status, className = '
         setSuccessPopup(false); // Oculta o popup após 2 segundos
       }, 2000);
 
+      fetchCones(); // Atualiza a lista de cones após a criação de um novo cone
+
     } catch (error) {
       console.error('Failed to activate smart cone:', error);
+    }
+  };
+
+  const updateCone = async (id, sectorId) => {
+    try {
+      await axios.put(`/cones/update/${id}`, {
+        sector: sectorId,
+      });
+
+      setSuccessPopup(true); // Mostra o popup de sucesso
+
+      setTimeout(() => {
+        setSuccessPopup(false); // Oculta o popup após 2 segundos
+      }, 2000);
+
+      fetchCones(); // Atualiza a lista de cones após a atualização de um cone
+
+    } catch (error) {
+      console.error('Failed to update smart cone:', error);
+    }
+  };
+
+  const deleteCone = async (id) => {
+    try {
+      await axios.delete(`/cones/destroy/${id}`);
+
+      setSuccessPopup(true); // Mostra o popup de sucesso
+
+      setTimeout(() => {
+        setSuccessPopup(false); // Oculta o popup após 2 segundos
+      }, 2000);
+
+      fetchCones(); // Atualiza a lista de cones após a exclusão de um cone
+
+    } catch (error) {
+      console.error('Failed to delete smart cone:', error);
     }
   };
 
@@ -136,11 +185,53 @@ export default function ActiveSmartCone({ mustVerifyEmail, status, className = '
             className="inline-block"
           >
             <div className="bg-green-500 text-white px-4 py-2 rounded-lg">
-              A adição do cone foi um sucesso
+              The smart cone has been successfully activated.
             </div>
           </Transition>
         </div>
       </form>
+
+      <div className="mt-8">
+        <h2 className="text-lg font-medium text-gray-900">My Cones</h2>
+
+        {cones.length === 0 ? (
+          <p className="text-gray-600">You don't have any smart cones yet.</p>
+        ) : (
+          <ul className="mt-4 space-y-4">
+            {cones.map((cone) => (
+              <li key={cone.id} className="flex items-center justify-between">
+                <div>
+                  <p className="text-lg font-medium text-gray-900">{cone.mac}</p>
+                  <p className="mt-1 text-sm text-gray-600">Sector: {cone.setor}</p>
+                  <p className="mt-1 text-sm text-gray-600">Responsável: {cone.responsavel}</p>
+                </div>
+
+                <div>
+                  <Select
+                    value={cone.setor}
+                    onChange={(e) => updateCone(cone.mac, e.target.value)}
+                    className="w-48"
+                  >
+                    <option value="">Select Sector</option>
+                    {sectors.map((sector) => (
+                      <option key={sector.id} value={sector.id}>
+                        {sector.name}
+                      </option>
+                    ))}
+                  </Select>
+
+                  <button
+                    onClick={() => deleteCone(cone.mac)}
+                    className="text-red-600 hover:text-red-800"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </section>
   );
 }

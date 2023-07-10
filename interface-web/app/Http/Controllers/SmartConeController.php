@@ -131,5 +131,64 @@ class SmartConeController extends Controller
     
         return response()->json(['totalEvents' => (string)$totalEvents]);
     }
+
+    public function show()
+    {
+        $user = auth()->user();
+        
+        if ($user->hasPermissionTo('admin')) {
+            $cones = SmartCone::all();
+        } else {
+            $cones = SmartCone::where('user_id', $user->id)->get();
+        }
+    
+        $coneDetails = [];
+    
+        foreach ($cones as $cone) {
+            $sector = Sector::find($cone->sector_id);
+            $responsaveis = User::where('id', $cone->user_id)->pluck('name')->toArray();
+    
+            $coneDetails[] = [
+                'id' => $cone->id,
+                'mac' => $cone->mac,
+                'setor' => $sector ? $sector->name : 'Unknown',
+                'responsavel' => implode(', ', $responsaveis),
+            ];
+        }
+    
+        return response()->json($coneDetails);
+    }
+    
+public function update(Request $request, $mac)
+{
+    $smartCone = SmartCone::where('mac', $mac)->first();
+
+    if (!$smartCone) {
+        return response()->json(['error' => 'Smart cone not found.'], 404);
+    }
+
+    $data = $request->validate([
+        'sector' => 'required|exists:sectors,id',
+    ]);
+
+    $smartCone->sector_id = $data['sector'];
+    $smartCone->save();
+
+    return response()->json(['message' => 'Smart cone updated successfully']);
+}
+
+public function destroy($mac)
+{
+    $smartCones = SmartCone::where('mac', $mac)->get();
+
+    if ($smartCones->isEmpty()) {
+        return response()->json(['error' => 'Smart cone not found.'], 404);
+    }
+
+    $smartCones->each->delete();
+
+    return response()->json(['message' => 'Smart cones deleted successfully']);
+}
+
     
 }
