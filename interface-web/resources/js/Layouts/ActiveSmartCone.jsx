@@ -8,6 +8,7 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import { Link, useForm, usePage } from '@inertiajs/react';
 import Select from '@/Components/Select';
+import SectorList from '@/Pages/SectorList';
 
 export default function ActiveSmartCone({ mustVerifyEmail, status, className = '' }) {
   const [successPopup, setSuccessPopup] = useState(false);
@@ -191,8 +192,8 @@ export default function ActiveSmartCone({ mustVerifyEmail, status, className = '
         </div>
       </form>
 
-      <div className="mt-8">
-        <h2 className="text-lg font-medium text-gray-900">My Cones</h2>
+      <div className="mt-20 bg-gray-200 p-4">
+        <h2 className="text-2xl font-bold text-yellow-600 ">My Cones</h2>
 
         {cones.length === 0 ? (
           <p className="text-gray-600">You don't have any smart cones yet.</p>
@@ -201,9 +202,9 @@ export default function ActiveSmartCone({ mustVerifyEmail, status, className = '
             {cones.map((cone) => (
               <li key={cone.id} className="flex items-center justify-between">
                 <div>
-                  <p className="text-lg font-medium text-gray-900">{cone.mac}</p>
+                  <p className="text-lg font-medium text-gray-900">Mac: {cone.mac}</p>
                   <p className="mt-1 text-sm text-gray-600">Sector: {cone.setor}</p>
-                  <p className="mt-1 text-sm text-gray-600">Responsável: {cone.responsavel}</p>
+                  <p className="mt-1 text-sm text-gray-600">Responsible: {cone.responsavel}</p>
                 </div>
 
                 <div>
@@ -212,7 +213,7 @@ export default function ActiveSmartCone({ mustVerifyEmail, status, className = '
                     onChange={(e) => updateCone(cone.mac, e.target.value)}
                     className="w-48"
                   >
-                    <option value="">Select Sector</option>
+                    <option>Select the sector</option>
                     {sectors.map((sector) => (
                       <option key={sector.id} value={sector.id}>
                         {sector.name}
@@ -222,7 +223,7 @@ export default function ActiveSmartCone({ mustVerifyEmail, status, className = '
 
                   <button
                     onClick={() => deleteCone(cone.mac)}
-                    className="text-red-600 hover:text-red-800"
+                    className="mx-3 bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded"
                   >
                     Delete
                   </button>
