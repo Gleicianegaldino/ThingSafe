@@ -20,10 +20,9 @@ const OperatorDashboard = ({ dailyAlertCount, weeklyAlertCount, monthlyAlertCoun
 
     return (
         <div>
-            <p>Operator</p>
             <AlertLink href={route('dailyevents')} active={route().current('dailyevents')}>
                 <LargeTextBlock key={1} text="Daily Events" number={dailyAlertCount.toString()} backgroundColor="#DC143C" alertColumnValue={dailyAlertCount} />
-            </AlertLink>,
+            </AlertLink>
             <ThreeColumnData data={dataThreeColumnOperator} />
         </div>
     );

@@ -30,9 +30,9 @@ const SectorList = ({ handleDelete }) => {
 
       <ul className="mt-4 space-y-2">
         {sectors.map((sector) => (
-          <li key={sector} className="flex items-center justify-between bg-gray-100 rounded p-2">
+          <li key={sector} className="flex items-center justify-between bg-gray-200 rounded p-2">
             <span>{sector}</span>
-            <button onClick={() => handleDeleteAndReload(sector)} className="text-red-500 hover:text-red-700">Delete</button>
+            <button onClick={() => handleDeleteAndReload(sector)} className="mx-3 bg-red-800 hover:bg-red-700 text-white py-2 px-4 border border-red-500 rounded">Delete</button>
           </li>
         ))}
       </ul>

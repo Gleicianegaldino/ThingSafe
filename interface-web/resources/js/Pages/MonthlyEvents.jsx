@@ -36,26 +36,10 @@ export default function DailyEvents({ auth }) {
                     <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                         <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                             <div className="p-6 text-gray-900">
-                                {loading ? (
-                                    <div className="flex items-center justify-center">
-                                        <Oval
-                                            height={80}
-                                            width={80}
-                                            color="#ffff00"
-                                            wrapperStyle={{}}
-                                            wrapperClass=""
-                                            visible={true}
-                                            ariaLabel='oval-loading'
-                                            secondaryColor="#000000"
-                                            strokeWidth={2}
-                                            strokeWidthSecondary={2}
-
-                                        />
-                                    </div>
-                                ) : events.length > 0 ? (
+                                {events.length > 0 ? (
                                     <EventList events={events} />
                                 ) : (
-                                    <div className="text-center text-gray-500">Nenhuma invasão no mês</div>
+                                    <div className="text-center text-gray-500">No hacks in the month</div>
                                 )}
                             </div>
                         </div>

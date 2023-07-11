@@ -10,9 +10,8 @@ import { Link, useForm, usePage } from '@inertiajs/react';
 import Select from '@/Components/Select';
 import SectorList from '@/Pages/SectorList';
 
-export default function ActiveSmartCone({ mustVerifyEmail, status, className = '' }) {
+export default function ActiveSmartCone({ className = '' }) {
   const [successPopup, setSuccessPopup] = useState(false);
-  const user = usePage().props.auth.user;
 
   const { data, setData, patch, errors, processing, recentlySuccessful } = useForm({
     coneId: '',
@@ -73,11 +72,11 @@ export default function ActiveSmartCone({ mustVerifyEmail, status, className = '
         sector: sectorId,
       });
 
-      setSuccessPopup(true); // Mostra o popup de sucesso
+      // setSuccessPopup(true); // Mostra o popup de sucesso
 
-      setTimeout(() => {
-        setSuccessPopup(false); // Oculta o popup após 2 segundos
-      }, 2000);
+      // setTimeout(() => {
+      //   setSuccessPopup(false); // Oculta o popup após 2 segundos
+      // }, 2000);
 
       fetchCones(); // Atualiza a lista de cones após a atualização de um cone
 
@@ -90,11 +89,11 @@ export default function ActiveSmartCone({ mustVerifyEmail, status, className = '
     try {
       await axios.delete(`/cones/destroy/${id}`);
 
-      setSuccessPopup(true); // Mostra o popup de sucesso
+      // setSuccessPopup(true); // Mostra o popup de sucesso
 
-      setTimeout(() => {
-        setSuccessPopup(false); // Oculta o popup após 2 segundos
-      }, 2000);
+      // setTimeout(() => {
+      //   setSuccessPopup(false); // Oculta o popup após 2 segundos
+      // }, 2000);
 
       fetchCones(); // Atualiza a lista de cones após a exclusão de um cone
 
@@ -150,50 +149,26 @@ export default function ActiveSmartCone({ mustVerifyEmail, status, className = '
           <InputError message={errors.sector} className="mt-2" />
         </div>
 
-        {mustVerifyEmail && user.email_verified_at === null && (
-          <div>
-            <p className="text-sm mt-2 text-gray-800">
-              Your email address is unverified.
-              <Link
-                href={route('verification.send')}
-                method="post"
-                as="button"
-                className="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              >
-                Click here to re-send the verification email.
-              </Link>
-            </p>
-
-            {status === 'verification-link-sent' && (
-              <div className="mt-2 font-medium text-sm text-green-600">
-                A new verification link has been sent to your email address.
-              </div>
-            )}
-          </div>
-        )}
-
         <div className="flex items-center gap-4">
           <PrimaryButton disabled={processing}>Active</PrimaryButton>
 
           <Transition
-            show={successPopup}
-            enter="transition-opacity duration-300"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="transition-opacity duration-300"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-            className="inline-block"
-          >
-            <div className="bg-green-500 text-white px-4 py-2 rounded-lg">
-              The smart cone has been successfully activated.
-            </div>
-          </Transition>
+          show={successPopup}
+          enter="transition-opacity duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="transition-opacity duration-300"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+          className="inline-block"
+        >
+          <p className="text-sm text-gray-600">Activated.</p>
+        </Transition>
         </div>
       </form>
 
-      <div className="mt-20 bg-gray-200 p-4">
-        <h2 className="text-2xl font-bold text-yellow-600 ">My Cones</h2>
+      <div className="mt-20 border-gray-200 p-4 border rounded-lg">
+        <h2 className="text-2xl font-bold text-yellow-400 ">My Cones</h2>
 
         {cones.length === 0 ? (
           <p className="text-gray-600">You don't have any smart cones yet.</p>
@@ -208,7 +183,7 @@ export default function ActiveSmartCone({ mustVerifyEmail, status, className = '
                 </div>
 
                 <div>
-                  <Select
+                  {/* <Select
                     value={cone.setor}
                     onChange={(e) => updateCone(cone.mac, e.target.value)}
                     className="w-48"
@@ -219,11 +194,11 @@ export default function ActiveSmartCone({ mustVerifyEmail, status, className = '
                         {sector.name}
                       </option>
                     ))}
-                  </Select>
+                  </Select> */}
 
                   <button
                     onClick={() => deleteCone(cone.mac)}
-                    className="mx-3 bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded"
+                    className="mx-3 bg-red-800 hover:bg-red-700 text-white py-2 px-4 border border-red-500 rounded"
                   >
                     Delete
                   </button>
