@@ -183,18 +183,18 @@ export default function ActiveSmartCone({ className = '' }) {
                 </div>
 
                 <div>
-                  {/* <Select
+                  <Select
                     value={cone.setor}
                     onChange={(e) => updateCone(cone.mac, e.target.value)}
                     className="w-48"
                   >
-                    <option>Select the sector</option>
+                    <option>Alter the sector</option>
                     {sectors.map((sector) => (
                       <option key={sector.id} value={sector.id}>
                         {sector.name}
                       </option>
                     ))}
-                  </Select> */}
+                  </Select>
 
                   <button
                     onClick={() => deleteCone(cone.mac)}
