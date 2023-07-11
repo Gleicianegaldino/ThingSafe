@@ -43,6 +43,7 @@ class SmartConeController extends Controller
         $now = date('Y-m-d H:i:s');
         $dayOfWeek = date('w', strtotime($now));
         
+        
         // Definir o período de tempo com base na unidade fornecida
         if ($unit === 'day') {
             $startDate->startOfDay()->subDay();
