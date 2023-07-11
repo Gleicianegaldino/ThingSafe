@@ -46,8 +46,7 @@ class SmartConeController extends Controller
         
         // Definir o período de tempo com base na unidade fornecida
         if ($unit === 'day') {
-            $startDate->startOfDay()->subDay();
-            $endDate->endOfDay()->subDays();
+            $startDate->subDays();
         } elseif ($unit === 'week') {
             $startDate->subDays(7);
         } elseif ($unit === 'month') {
@@ -103,8 +102,7 @@ class SmartConeController extends Controller
     
         // Definir o período de tempo com base na unidade fornecida
         if ($unit === 'day') {
-            $startDate->startOfDay()->subDay();
-            $endDate->endOfDay()->subDays();
+            $startDate->subDays(1);
         } elseif ($unit === 'week') {
             $startDate->subDays(7); // Modificação: Subtrai 7 dias da data atual
         } elseif ($unit === 'month') {
