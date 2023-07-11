@@ -31,6 +31,7 @@ const AdminDashboard = ({ dailyAlertCount, weeklyAlertCount, monthlyAlertCount, 
             <p>Admin</p>
             <TwoColumnData data={dataTwoColumnAdmin} />
             <ThreeColumnData data={dataThreeColumnAdmin} />
+            <img src='./assets/images/Untitled.png' style={{ width: '20%', height: '50%', margin: 'auto' }}></img>
         </div>
     );
 };

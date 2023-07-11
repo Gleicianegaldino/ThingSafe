@@ -17,7 +17,7 @@ const EventList = ({ events }) => {
           <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-100'}>
             <td className="border px-4 py-2">{event.setor}</td>
             <td className="border px-4 py-2">{event.responsavel}</td>
-            <td className="border px-4 py-2">{moment(event.created_at).format('HH:mm:ss')}</td>
+            <td className="border px-4 py-2">{moment(event.created_at).format('MM-DD-YYYY HH:mm:ss')}</td>
           </tr>
         ))}
       </tbody>

@@ -24,6 +24,7 @@ const OperatorDashboard = ({ dailyAlertCount, weeklyAlertCount, monthlyAlertCoun
                 <LargeTextBlock key={1} text="Daily Events" number={dailyAlertCount.toString()} backgroundColor="#DC143C" alertColumnValue={dailyAlertCount} />
             </AlertLink>
             <ThreeColumnData data={dataThreeColumnOperator} />
+            <img src='./assets/images/operator.png' style={{ width: '20%', height: '50%', margin: 'auto' }}></img>
         </div>
     );
 };
