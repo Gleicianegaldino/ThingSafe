@@ -45,17 +45,14 @@ class SmartConeController extends Controller
         
         // Definir o período de tempo com base na unidade fornecida
         if ($unit === 'day') {
-            $startDate->startOfDay();
-            $endDate->endOfDay();
+            $startDate->startOfDay()->subDay();
+            $endDate->endOfDay()->subDays();
         } elseif ($unit === 'week') {
-            $startDate->startOfWeek()->subWeek();
-            $endDate->endOfWeek()->subWeek();
+            $startDate->subDays(7);
         } elseif ($unit === 'month') {
-            $startDate->startOfMonth();
-            $endDate->endOfMonth();
+            $startDate->subDays(30);
         } elseif ($unit === 'year') {
-            $startDate->startOfYear();
-            $endDate->endOfYear();
+            $startDate->subDays(365);
         } else {
             return response()->json(['error' => 'Unidade de tempo inválida.']);
         }
@@ -105,8 +102,8 @@ class SmartConeController extends Controller
     
         // Definir o período de tempo com base na unidade fornecida
         if ($unit === 'day') {
-            $startDate->startOfDay();
-            $endDate->endOfDay();
+            $startDate->startOfDay()->subDay();
+            $endDate->endOfDay()->subDays();
         } elseif ($unit === 'week') {
             $startDate->subDays(7); // Modificação: Subtrai 7 dias da data atual
         } elseif ($unit === 'month') {
